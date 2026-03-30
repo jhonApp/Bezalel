@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <RootNamespace>Midianita.Workers.ProcessadorArte</RootNamespace>
+    <AssemblyName>Midianita.Workers.ProcessadorArte</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- AWS Lambda Core -->
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.2" />
+
+    <!-- AWS SDKs -->
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.302.16" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.304" />
+
+    <!-- Microsoft Extensions for DI / HTTP -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
+
+    <!-- Imaging / Typography (SkiaSharp) -->
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <!-- Native binaries for the Lambda Linux x64 environment -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
+  </ItemGroup>
+
+</Project>
