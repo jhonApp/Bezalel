@@ -3,12 +3,12 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
 using Microsoft.Extensions.DependencyInjection;
-using Midianita.Workers.AnalisadorBanner.Services;
+using Bezalel.Workers.AnalisadorBanner.Services;
 using System.Text.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace Midianita.Workers.AnalisadorBanner;
+namespace Bezalel.Workers.AnalisadorBanner;
 
 public record SqsMessageBody(string BannerId);
 

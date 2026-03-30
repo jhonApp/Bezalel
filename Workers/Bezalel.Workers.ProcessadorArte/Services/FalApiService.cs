@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 public sealed class FalApiService : IFalApiService
 {

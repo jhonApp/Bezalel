@@ -12,5 +12,5 @@
   "function-runtime": "dotnet8",
   "function-memory-size": 512,
   "function-timeout": 30,
-  "function-handler": "Midianita.Workers.ProcessadorArte::Midianita.Workers.ProcessadorArte.Function::FunctionHandler"
+  "function-handler": "Bezalel.Workers.ProcessadorArte::Bezalel.Workers.ProcessadorArte.Function::FunctionHandler"
 }

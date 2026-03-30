@@ -1,9 +1,9 @@
 ﻿using Amazon.SQS;
 using Amazon.SQS.Model;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 using System.Text.Json;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class SqsPublisher : IQueuePublisher
     {

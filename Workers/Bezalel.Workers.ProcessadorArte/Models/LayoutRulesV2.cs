@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.ProcessadorArte.Models;
 
 public record LayoutRulesV2(
     [property: JsonPropertyName("masterPrompt")] string MasterPrompt,

@@ -1,6 +1,6 @@
 using Amazon.Lambda.Core;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
 /// Uploads the final composed image to S3 and returns the public URL.

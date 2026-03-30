@@ -1,6 +1,6 @@
-using Midianita.API.Filters;
-using Midianita.Ioc;
-using Midianita.API.Extensions;
+using Bezalel.API.Filters;
+using Bezalel.Ioc;
+using Bezalel.API.Extensions;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 

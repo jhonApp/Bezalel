@@ -1,11 +1,11 @@
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Midianita.Core.Entities;
-using Midianita.Infrastructure.Services;
+using Bezalel.Core.Entities;
+using Bezalel.Infrastructure.Services;
 using Moq;
 using Xunit;
 
-namespace Midianita.Test
+namespace Bezalel.Test
 {
     public class SqsAuditPublisherTests
     {

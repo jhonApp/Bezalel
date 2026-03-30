@@ -4,13 +4,13 @@ using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.DependencyInjection;
-using Midianita.Workers.ProcessadorArte.Models;
-using Midianita.Workers.ProcessadorArte.Services;
+using Bezalel.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.ProcessadorArte.Services;
 using System.Text.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace Midianita.Workers.ProcessadorArte;
+namespace Bezalel.Workers.ProcessadorArte;
 
 public class Function
 {
@@ -198,8 +198,8 @@ public class Function
 
     /// <summary>
     /// Extracts the clean object key from any of these formats:
-    /// - URL HTTPS: https://midianita-dev-assets.s3.amazonaws.com/anexos/imagem.jpg
-    /// - S3 URI: s3://midianita-dev-assets/anexos/imagem.jpg
+    /// - URL HTTPS: https://Bezalel-dev-assets.s3.amazonaws.com/anexos/imagem.jpg
+    /// - S3 URI: s3://Bezalel-dev-assets/anexos/imagem.jpg
     /// - Raw Key: anexos/imagem.jpg
     /// </summary>
     public static string ExtractS3Key(string input, string bucketName)
@@ -210,13 +210,13 @@ public class Function
 
         if (Uri.TryCreate(input, UriKind.Absolute, out var uri))
         {
-            // Cenário B: s3://midianita-dev-assets/anexos/imagem.jpg
+            // Cenário B: s3://Bezalel-dev-assets/anexos/imagem.jpg
             if (uri.Scheme.Equals("s3", StringComparison.OrdinalIgnoreCase))
             {
                 return uri.AbsolutePath.TrimStart('/');
             }
 
-            // Cenário A: https://midianita-dev-assets.s3.amazonaws.com/anexos/imagem.jpg
+            // Cenário A: https://Bezalel-dev-assets.s3.amazonaws.com/anexos/imagem.jpg
             if (uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) || 
                 uri.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase))
             {

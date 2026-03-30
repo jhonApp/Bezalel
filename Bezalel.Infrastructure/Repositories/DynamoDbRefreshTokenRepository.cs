@@ -1,11 +1,11 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Midianita.Infrastructure.Repositories
+namespace Bezalel.Infrastructure.Repositories
 {
     public class DynamoDbRefreshTokenRepository : IRefreshTokenRepository
     {
@@ -15,7 +15,7 @@ namespace Midianita.Infrastructure.Repositories
         public DynamoDbRefreshTokenRepository(IDynamoDBContext context, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _context = context;
-            var tableName = configuration["DynamoDb:RefreshToken"] ?? "RefreshToken_Midianita";
+            var tableName = configuration["DynamoDb:RefreshToken"] ?? "RefreshToken_Bezalel";
             _config = new DynamoDBOperationConfig { OverrideTableName = tableName };
         }
 

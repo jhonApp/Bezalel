@@ -34,12 +34,12 @@
       "KeyType": "HASH"
      }
     ],
-    "TableName": "Midianita_Dev_Designs"
+    "TableName": "Bezalel_Dev_Designs"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/DesignsTable/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/DesignsTable/Resource"
    }
   },
   "AuditTableB07F8EEB": {
@@ -66,30 +66,30 @@
       "KeyType": "RANGE"
      }
     ],
-    "TableName": "Midianita_Dev_AuditLogs"
+    "TableName": "Bezalel_Dev_AuditLogs"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AuditTable/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AuditTable/Resource"
    }
   },
   "AuditQueue1D3C234B": {
    "Type": "AWS::SQS::Queue",
    "Properties": {
-    "QueueName": "Midianita_Dev_AuditQueue",
+    "QueueName": "Bezalel_Dev_AuditQueue",
     "VisibilityTimeout": 90
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AuditQueue/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AuditQueue/Resource"
    }
   },
   "AssetsBucket5CB76180": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
-    "BucketName": "midianita-dev-assets",
+    "BucketName": "Bezalel-dev-assets",
     "CorsConfiguration": {
      "CorsRules": [
       {
@@ -119,7 +119,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AssetsBucket/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AssetsBucket/Resource"
    }
   },
   "AssetsBucketPolicyFFACF6C4": {
@@ -174,7 +174,7 @@
     }
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AssetsBucket/Policy/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AssetsBucket/Policy/Resource"
    }
   },
   "AssetsBucketAutoDeleteObjectsCustomResource51BA1286": {
@@ -196,7 +196,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete",
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource/Default"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource/Default"
    }
   },
   "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
@@ -221,7 +221,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
    }
   },
   "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
@@ -258,7 +258,7 @@
     "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
    ],
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
     "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
     "aws:asset:property": "Code"
    }
@@ -294,7 +294,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/Resource"
    }
   },
   "AnalisadorBannerFunctionServiceRoleDefaultPolicy18FE9880": {
@@ -405,7 +405,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy/Resource"
    }
   },
   "AnalisadorBannerFunctionD250AEEB": {
@@ -425,7 +425,7 @@
       }
      }
     },
-    "Handler": "Midianita.Workers.AnalisadorBanner::Midianita.Workers.AnalisadorBanner.Function::FunctionHandler",
+    "Handler": "Bezalel.Workers.AnalisadorBanner::Bezalel.Workers.AnalisadorBanner.Function::FunctionHandler",
     "MemorySize": 256,
     "Role": {
      "Fn::GetAtt": [
@@ -441,13 +441,13 @@
     "AnalisadorBannerFunctionServiceRole182BE8EF"
    ],
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/Resource",
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/Resource",
     "aws:asset:path": "asset.1ebc9d3ac2033816c4abb63e4afd69d350b4aba8704cc9236b82ea520b74f4b0",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
   },
-  "AnalisadorBannerFunctionSqsEventSourceMidianitaInfrastructureIaCStackAuditQueue0D9D3E2394B63C89": {
+  "AnalisadorBannerFunctionSqsEventSourceBezalelInfrastructureIaCStackAuditQueue0D9D3E2394B63C89": {
    "Type": "AWS::Lambda::EventSourceMapping",
    "Properties": {
     "EventSourceArn": {
@@ -461,7 +461,7 @@
     }
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23/Resource"
    }
   },
   "ProcessadorArteFunctionServiceRole591DC134": {
@@ -495,7 +495,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/Resource"
    }
   },
   "ProcessadorArteFunctionServiceRoleDefaultPolicy0C7E8F8C": {
@@ -606,7 +606,7 @@
     ]
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy/Resource"
    }
   },
   "ProcessadorArteFunctionEE323EF8": {
@@ -626,7 +626,7 @@
       }
      }
     },
-    "Handler": "Midianita.Workers.ProcessadorArte::Midianita.Workers.ProcessadorArte.Function::FunctionHandler",
+    "Handler": "Bezalel.Workers.ProcessadorArte::Bezalel.Workers.ProcessadorArte.Function::FunctionHandler",
     "MemorySize": 512,
     "Role": {
      "Fn::GetAtt": [
@@ -642,13 +642,13 @@
     "ProcessadorArteFunctionServiceRole591DC134"
    ],
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/Resource",
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/Resource",
     "aws:asset:path": "asset.1ebc9d3ac2033816c4abb63e4afd69d350b4aba8704cc9236b82ea520b74f4b0",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
   },
-  "ProcessadorArteFunctionSqsEventSourceMidianitaInfrastructureIaCStackAuditQueue0D9D3E23CA2BF57D": {
+  "ProcessadorArteFunctionSqsEventSourceBezalelInfrastructureIaCStackAuditQueue0D9D3E23CA2BF57D": {
    "Type": "AWS::Lambda::EventSourceMapping",
    "Properties": {
     "BatchSize": 1,
@@ -663,7 +663,7 @@
     }
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23/Resource"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23/Resource"
    }
   },
   "CDKMetadata": {
@@ -672,7 +672,7 @@
     "Analytics": "v2:deflate64:H4sIAAAAAAAA/3WOwW6DMBBEvyV3s0DSSr30kND01jSFqNfIwCZyAZt6baLI8r9XBlQOVeXDvJm1dmcN6WMCyYrfKKrqJmpFCa4wvGoYv9HZ1XfJO1WX4E68bJFlFzmCZ/RN4D4s2jEcwTPagNvZqkETwpkmOapWVPclnv1kdpzQs5Z3Zc3BvVpZGaFk+PzL+wGlKZTVFb7xvhfyGsZ/U88E78Dlamo76nJ7olD0zInQEGyDeJYjjVtYZsmobrEX+c/oqNUgatShOxu3FIZf517v1vTWePaizAFN/AQJrB9iOOxPmdK47fvoEzUJJZ+HDaRxCkl4qy8SItJWGtEh5JP+AD4iiAejAQAA"
    },
    "Metadata": {
-    "aws:cdk:path": "MidianitaInfrastructureIaCStack/CDKMetadata/Default"
+    "aws:cdk:path": "BezalelInfrastructureIaCStack/CDKMetadata/Default"
    }
   }
  },

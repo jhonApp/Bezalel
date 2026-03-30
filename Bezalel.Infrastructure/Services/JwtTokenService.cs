@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class JwtTokenService : ITokenService
     {

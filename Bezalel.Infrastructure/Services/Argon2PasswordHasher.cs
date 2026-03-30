@@ -1,11 +1,11 @@
 using Konscious.Security.Cryptography;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class Argon2PasswordHasher : ICryptographyService
     {

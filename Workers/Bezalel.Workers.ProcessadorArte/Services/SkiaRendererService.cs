@@ -1,7 +1,7 @@
-using Midianita.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.ProcessadorArte.Models;
 using SkiaSharp;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
 /// Composes the final banner using a strict 4-layer Z-index system:

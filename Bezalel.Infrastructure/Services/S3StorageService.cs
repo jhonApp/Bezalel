@@ -1,9 +1,9 @@
 using Amazon.S3;
 using Amazon.S3.Model;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class S3StorageService : IStorageService
     {
@@ -13,7 +13,7 @@ namespace Midianita.Infrastructure.Services
         public S3StorageService(IAmazonS3 s3Client, IConfiguration configuration)
         {
             _s3Client = s3Client;
-            _bucketName = configuration["AWS:BucketName"] ?? "midianita-designs";
+            _bucketName = configuration["AWS:BucketName"] ?? "Bezalel-designs";
         }
 
         public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType)

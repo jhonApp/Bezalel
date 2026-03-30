@@ -1,7 +1,7 @@
-using Midianita.Aplication.ViewModel;
-using Midianita.Core.Entities;
+using Bezalel.Aplication.ViewModel;
+using Bezalel.Core.Entities;
 
-namespace Midianita.Aplication.Interface
+namespace Bezalel.Aplication.Interface
 {
     public interface IDesignsService
     {

@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
 using System.Text.RegularExpressions;
 
-namespace Midianita.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.AnalisadorBanner.Services;
 
 public interface ISafetyService
 {

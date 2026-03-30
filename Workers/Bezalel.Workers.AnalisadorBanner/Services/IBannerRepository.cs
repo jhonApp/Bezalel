@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
-using Midianita.Workers.AnalisadorBanner.Models;
+using Bezalel.Workers.AnalisadorBanner.Models;
 
-namespace Midianita.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.AnalisadorBanner.Services;
 
 /// <summary>
 /// Persists banner analysis results to the backing store.

@@ -31,7 +31,7 @@
     },
     "a0a98a98b498e654835a86ef879ca6cc078a748f5c46d102ef06e2380ae8e7b9": {
       "source": {
-        "path": "MidianitaInfrastructureIaCStack.template.json",
+        "path": "BezalelInfrastructureIaCStack.template.json",
         "packaging": "file"
       },
       "destinations": {

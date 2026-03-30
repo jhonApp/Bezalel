@@ -3,11 +3,11 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Midianita.Infrastructure.Services;
+using Bezalel.Infrastructure.Services;
 using Moq;
 using Xunit;
 
-namespace Midianita.Test
+namespace Bezalel.Test
 {
     public class S3StorageServiceTests
     {

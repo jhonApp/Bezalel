@@ -1,6 +1,6 @@
-using Midianita.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.ProcessadorArte.Models;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
 /// Renders the final composed banner using the deterministic layout

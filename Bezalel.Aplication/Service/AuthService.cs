@@ -1,11 +1,11 @@
-using Midianita.Aplication.DTOs;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Aplication.DTOs;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Midianita.Aplication.Service
+namespace Bezalel.Aplication.Service
 {
     public class AuthService : IAuthService
     {

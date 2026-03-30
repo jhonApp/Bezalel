@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.ProcessadorArte.Models;
 
 /// <summary>
 /// Aggregated record returned by the repository containing everything

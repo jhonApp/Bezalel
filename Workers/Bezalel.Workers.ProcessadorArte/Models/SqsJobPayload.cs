@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.ProcessadorArte.Models;
 
 /// <summary>Payload deserialized from the SQS message body.</summary>
 public record SqsJobPayload(

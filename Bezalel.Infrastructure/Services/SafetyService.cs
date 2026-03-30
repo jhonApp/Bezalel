@@ -1,7 +1,7 @@
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 using System;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class SafetyService : ISafetyService
     {

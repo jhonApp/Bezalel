@@ -1,4 +1,4 @@
-namespace Midianita.Core.DTOs
+namespace Bezalel.Core.DTOs
 {
     /// <summary>
     /// Message published to the SQS Analysis Queue.

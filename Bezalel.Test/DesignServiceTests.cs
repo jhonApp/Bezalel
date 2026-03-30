@@ -2,13 +2,13 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Midianita.Aplication.Service;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Aplication.Service;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using Moq;
 using Xunit;
 
-namespace Midianita.Test
+namespace Bezalel.Test
 {
     public class DesignServiceTests
     {

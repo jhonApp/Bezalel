@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
 using System.Text.Json;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 public interface ITelemetryService
 {

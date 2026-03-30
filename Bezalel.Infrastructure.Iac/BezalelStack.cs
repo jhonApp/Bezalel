@@ -9,16 +9,16 @@ using Amazon.CDK.AWS.SQS;
 using Amazon.CDK.AWS.SSM;
 using Constructs;
 
-namespace Midianita.Infrastructure.IaC
+namespace Bezalel.Infrastructure.IaC
 {
-    public class MidianitaInfrastructureIaCStack : Stack
+    public class BezalelInfrastructureIaCStack : Stack
     {
-        internal MidianitaInfrastructureIaCStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+        internal BezalelInfrastructureIaCStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
-            // 1. DynamoDB: Midianita_Dev_Designs
+            // 1. DynamoDB: Bezalel_Dev_Designs
             var designsTable = new Table(this, "DesignsTable", new TableProps
             {
-                TableName = "Midianita_Dev_Designs",
+                TableName = "Bezalel_Dev_Designs",
                 PartitionKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "Id", Type = AttributeType.STRING },
                 BillingMode = BillingMode.PAY_PER_REQUEST,
                 RemovalPolicy = RemovalPolicy.DESTROY
@@ -31,27 +31,27 @@ namespace Midianita.Infrastructure.IaC
                 ProjectionType = ProjectionType.ALL
             });
 
-            // 2. DynamoDB: Midianita_Dev_AuditLogs
+            // 2. DynamoDB: Bezalel_Dev_AuditLogs
             var auditTable = new Table(this, "AuditTable", new TableProps
             {
-                TableName = "Midianita_Dev_AuditLogs",
+                TableName = "Bezalel_Dev_AuditLogs",
                 PartitionKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "LogId", Type = AttributeType.STRING },
                 SortKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "Timestamp", Type = AttributeType.STRING },
                 BillingMode = BillingMode.PAY_PER_REQUEST,
                 RemovalPolicy = RemovalPolicy.DESTROY
             });
 
-            // 3. SQS Dead Letter Queue: Midianita_Dev_AuditQueue_DLQ
+            // 3. SQS Dead Letter Queue: Bezalel_Dev_AuditQueue_DLQ
             var auditDlq = new Queue(this, "AuditQueueDLQ", new QueueProps
             {
-                QueueName = "Midianita_Dev_AuditQueue_DLQ",
+                QueueName = "Bezalel_Dev_AuditQueue_DLQ",
                 RetentionPeriod = Duration.Days(14) // Long life for manual debugging
             });
 
             // 3.1. Main SQS Queue with DLQ attached
             var auditQueue = new Queue(this, "AuditQueue", new QueueProps
             {
-                QueueName = "Midianita_Dev_AuditQueue",
+                QueueName = "Bezalel_Dev_AuditQueue",
                 VisibilityTimeout = Duration.Seconds(180),
                 DeadLetterQueue = new DeadLetterQueue
                 {
@@ -65,13 +65,13 @@ namespace Midianita.Infrastructure.IaC
             // -----------------------------------------------------------
             var imageGenerationDlq = new Queue(this, "ImageGenerationDLQ", new QueueProps
             {
-                QueueName = "Midianita_Dev_ImageGenerationQueue_DLQ",
+                QueueName = "Bezalel_Dev_ImageGenerationQueue_DLQ",
                 RetentionPeriod = Duration.Days(14)
             });
 
             var imageGenerationQueue = new Queue(this, "ImageGenerationQueue", new QueueProps
             {
-                QueueName = "Midianita_Dev_ImageGenerationQueue",
+                QueueName = "Bezalel_Dev_ImageGenerationQueue",
                 VisibilityTimeout = Duration.Seconds(180),
                 DeadLetterQueue = new DeadLetterQueue
                 {
@@ -85,13 +85,13 @@ namespace Midianita.Infrastructure.IaC
             // -----------------------------------------------------------
             var analysisDlq = new Queue(this, "AnalysisQueueDLQ", new QueueProps
             {
-                QueueName = "Midianita_Dev_AnalysisQueue_DLQ",
+                QueueName = "Bezalel_Dev_AnalysisQueue_DLQ",
                 RetentionPeriod = Duration.Days(14)
             });
 
             var analysisQueue = new Queue(this, "AnalysisQueue", new QueueProps
             {
-                QueueName = "Midianita_Dev_AnalysisQueue",
+                QueueName = "Bezalel_Dev_AnalysisQueue",
                 // VisibilityTimeout igual ou maior que o Timeout da Lambda (60s)
                 VisibilityTimeout = Duration.Seconds(60),
                 DeadLetterQueue = new DeadLetterQueue
@@ -101,10 +101,10 @@ namespace Midianita.Infrastructure.IaC
                 }
             });
 
-            // 4. S3 Bucket: midianita-dev-assets
+            // 4. S3 Bucket: Bezalel-dev-assets
             var assetsBucket = new Bucket(this, "AssetsBucket", new BucketProps
             {
-                BucketName = "midianita-dev-assets",
+                BucketName = "Bezalel-dev-assets",
                 AutoDeleteObjects = true,
                 RemovalPolicy = RemovalPolicy.DESTROY,
 
@@ -151,7 +151,7 @@ namespace Midianita.Infrastructure.IaC
             var analisadorLambda = new Amazon.CDK.AWS.Lambda.Function(this, "AnalisadorBannerFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
             {
                 Runtime = Amazon.CDK.AWS.Lambda.Runtime.DOTNET_8,
-                Handler = "Midianita.Workers.AnalisadorBanner::Midianita.Workers.AnalisadorBanner.Function::FunctionHandler",
+                Handler = "Bezalel.Workers.AnalisadorBanner::Bezalel.Workers.AnalisadorBanner.Function::FunctionHandler",
                 Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/AnalisadorBanner"),
                 MemorySize = 256,
                 Timeout = Duration.Seconds(60),
@@ -159,14 +159,14 @@ namespace Midianita.Infrastructure.IaC
                 {
                     { "DESIGNS_TABLE", designsTable.TableName },
                     { "ASSETS_BUCKET", assetsBucket.BucketName },
-                    { "DYNAMODB_BANNER_TABLE", "Midianita_Dev_Banner" }
+                    { "DYNAMODB_BANNER_TABLE", "Bezalel_Dev_Banner" }
                 }
             });
 
             var processadorLambda = new Amazon.CDK.AWS.Lambda.Function(this, "ProcessadorArteFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
             {
                 Runtime = Amazon.CDK.AWS.Lambda.Runtime.DOTNET_8,
-                Handler = "Midianita.Workers.ProcessadorArte::Midianita.Workers.ProcessadorArte.Function::FunctionHandler",
+                Handler = "Bezalel.Workers.ProcessadorArte::Bezalel.Workers.ProcessadorArte.Function::FunctionHandler",
                 Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/ProcessadorArte"),
                 MemorySize = 512,
                 // CORREÇÃO: O VisibilityTimeout da fila (180s) PRECISA SER MAIOR OU IGUAL ao Timeout da Lambda.
@@ -189,15 +189,15 @@ namespace Midianita.Infrastructure.IaC
             // Injetar variável de ambiente informando em qual bucket salvar a imagem em JPEG final
             processadorLambda.AddEnvironment("OUTPUT_S3_BUCKET", assetsBucket.BucketName);
 
-            // NOVO: Importando a tabela Midianita_Dev_Job externa e dando permissão + variável de ambiente
-            var jobTable = Table.FromTableName(this, "JobTable", "Midianita_Dev_Job");
+            // NOVO: Importando a tabela Bezalel_Dev_Job externa e dando permissão + variável de ambiente
+            var jobTable = Table.FromTableName(this, "JobTable", "Bezalel_Dev_Job");
             jobTable.GrantReadWriteData(processadorLambda);
             processadorLambda.AddEnvironment("DYNAMODB_JOB_TABLE", jobTable.TableName);
 
             // --------------------------------------------------------------------------------------
-            // NOVO: Importando a tabela Midianita_Dev_Banner externa e dando permissão IAM para a Lambda
+            // NOVO: Importando a tabela Bezalel_Dev_Banner externa e dando permissão IAM para a Lambda
             // --------------------------------------------------------------------------------------
-            var bannerTable = Table.FromTableName(this, "BannerTable", "Midianita_Dev_Banner");
+            var bannerTable = Table.FromTableName(this, "BannerTable", "Bezalel_Dev_Banner");
             bannerTable.GrantReadData(processadorLambda);
             processadorLambda.AddEnvironment("DYNAMODB_BANNER_TABLE", bannerTable.TableName);
             
@@ -208,13 +208,13 @@ namespace Midianita.Infrastructure.IaC
             // NOVO: Leitura segura da chave de API Fal.ai diretamente do SSM Parameter Store
             // O valor NUNCA toca o código-fonte — o CDK resolve o token em deploy time.
             // --------------------------------------------------------------------------------------
-            var falApiKey = StringParameter.ValueForStringParameter(this, "/Midianita/FalApiKey");
+            var falApiKey = StringParameter.ValueForStringParameter(this, "/Bezalel/FalApiKey");
             processadorLambda.AddEnvironment("FAL_KEY", falApiKey);
             
             // --------------------------------------------------------------------------------------
             // NOVO: Leitura segura da chave Anthropic (Claude) do SSM Parameter Store
             // --------------------------------------------------------------------------------------
-            var anthropicKey = StringParameter.ValueForStringParameter(this, "/Midianita/Anthropic_Key");
+            var anthropicKey = StringParameter.ValueForStringParameter(this, "/Bezalel/Anthropic_Key");
             analisadorLambda.AddEnvironment("ANTHROPIC_KEY", anthropicKey);
 
             // AnalisadorBanner: default batching is fine (lightweight analysis)

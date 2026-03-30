@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     /// <summary>
     /// Core/Application Layer: Interface for queue publishing

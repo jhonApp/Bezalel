@@ -4,17 +4,17 @@
     "id": "App",
     "path": "",
     "children": {
-      "MidianitaInfrastructureIaCStack": {
-        "id": "MidianitaInfrastructureIaCStack",
-        "path": "MidianitaInfrastructureIaCStack",
+      "BezalelInfrastructureIaCStack": {
+        "id": "BezalelInfrastructureIaCStack",
+        "path": "BezalelInfrastructureIaCStack",
         "children": {
           "DesignsTable": {
             "id": "DesignsTable",
-            "path": "MidianitaInfrastructureIaCStack/DesignsTable",
+            "path": "BezalelInfrastructureIaCStack/DesignsTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "MidianitaInfrastructureIaCStack/DesignsTable/Resource",
+                "path": "BezalelInfrastructureIaCStack/DesignsTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -49,7 +49,7 @@
                         "keyType": "HASH"
                       }
                     ],
-                    "tableName": "Midianita_Dev_Designs"
+                    "tableName": "Bezalel_Dev_Designs"
                   }
                 },
                 "constructInfo": {
@@ -59,7 +59,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "MidianitaInfrastructureIaCStack/DesignsTable/ScalingRole",
+                "path": "BezalelInfrastructureIaCStack/DesignsTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.150.0"
@@ -73,11 +73,11 @@
           },
           "AuditTable": {
             "id": "AuditTable",
-            "path": "MidianitaInfrastructureIaCStack/AuditTable",
+            "path": "BezalelInfrastructureIaCStack/AuditTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "MidianitaInfrastructureIaCStack/AuditTable/Resource",
+                "path": "BezalelInfrastructureIaCStack/AuditTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -102,7 +102,7 @@
                         "keyType": "RANGE"
                       }
                     ],
-                    "tableName": "Midianita_Dev_AuditLogs"
+                    "tableName": "Bezalel_Dev_AuditLogs"
                   }
                 },
                 "constructInfo": {
@@ -112,7 +112,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "MidianitaInfrastructureIaCStack/AuditTable/ScalingRole",
+                "path": "BezalelInfrastructureIaCStack/AuditTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.150.0"
@@ -126,15 +126,15 @@
           },
           "AuditQueue": {
             "id": "AuditQueue",
-            "path": "MidianitaInfrastructureIaCStack/AuditQueue",
+            "path": "BezalelInfrastructureIaCStack/AuditQueue",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "MidianitaInfrastructureIaCStack/AuditQueue/Resource",
+                "path": "BezalelInfrastructureIaCStack/AuditQueue/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
                   "aws:cdk:cloudformation:props": {
-                    "queueName": "Midianita_Dev_AuditQueue",
+                    "queueName": "Bezalel_Dev_AuditQueue",
                     "visibilityTimeout": 90
                   }
                 },
@@ -151,15 +151,15 @@
           },
           "AssetsBucket": {
             "id": "AssetsBucket",
-            "path": "MidianitaInfrastructureIaCStack/AssetsBucket",
+            "path": "BezalelInfrastructureIaCStack/AssetsBucket",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "MidianitaInfrastructureIaCStack/AssetsBucket/Resource",
+                "path": "BezalelInfrastructureIaCStack/AssetsBucket/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                   "aws:cdk:cloudformation:props": {
-                    "bucketName": "midianita-dev-assets",
+                    "bucketName": "Bezalel-dev-assets",
                     "corsConfiguration": {
                       "corsRules": [
                         {
@@ -194,11 +194,11 @@
               },
               "Policy": {
                 "id": "Policy",
-                "path": "MidianitaInfrastructureIaCStack/AssetsBucket/Policy",
+                "path": "BezalelInfrastructureIaCStack/AssetsBucket/Policy",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "MidianitaInfrastructureIaCStack/AssetsBucket/Policy/Resource",
+                    "path": "BezalelInfrastructureIaCStack/AssetsBucket/Policy/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
                       "aws:cdk:cloudformation:props": {
@@ -264,11 +264,11 @@
               },
               "AutoDeleteObjectsCustomResource": {
                 "id": "AutoDeleteObjectsCustomResource",
-                "path": "MidianitaInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource",
+                "path": "BezalelInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "MidianitaInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource/Default",
+                    "path": "BezalelInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.150.0"
@@ -288,11 +288,11 @@
           },
           "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
             "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
-            "path": "MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
             "children": {
               "Staging": {
                 "id": "Staging",
-                "path": "MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "path": "BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.AssetStaging",
                   "version": "2.150.0"
@@ -300,7 +300,7 @@
               },
               "Role": {
                 "id": "Role",
-                "path": "MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "path": "BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.150.0"
@@ -308,7 +308,7 @@
               },
               "Handler": {
                 "id": "Handler",
-                "path": "MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "path": "BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.150.0"
@@ -322,15 +322,15 @@
           },
           "AnalisadorBannerFunction": {
             "id": "AnalisadorBannerFunction",
-            "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction",
+            "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole",
+                "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/ImportServiceRole",
+                    "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.150.0"
@@ -338,7 +338,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/Resource",
+                    "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -377,11 +377,11 @@
                   },
                   "DefaultPolicy": {
                     "id": "DefaultPolicy",
-                    "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy",
+                    "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy/Resource",
+                        "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
@@ -509,11 +509,11 @@
               },
               "Code": {
                 "id": "Code",
-                "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/Code",
+                "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/Code/Stage",
+                    "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.150.0"
@@ -521,7 +521,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/Code/AssetBucket",
+                    "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.150.0"
@@ -535,7 +535,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/Resource",
+                "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -553,7 +553,7 @@
                         }
                       }
                     },
-                    "handler": "Midianita.Workers.AnalisadorBanner::Midianita.Workers.AnalisadorBanner.Function::FunctionHandler",
+                    "handler": "Bezalel.Workers.AnalisadorBanner::Bezalel.Workers.AnalisadorBanner.Function::FunctionHandler",
                     "memorySize": 256,
                     "role": {
                       "Fn::GetAtt": [
@@ -570,13 +570,13 @@
                   "version": "2.150.0"
                 }
               },
-              "SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23": {
-                "id": "SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23",
-                "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23",
+              "SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23": {
+                "id": "SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23",
+                "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23/Resource",
+                    "path": "BezalelInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::EventSourceMapping",
                       "aws:cdk:cloudformation:props": {
@@ -610,15 +610,15 @@
           },
           "ProcessadorArteFunction": {
             "id": "ProcessadorArteFunction",
-            "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction",
+            "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole",
+                "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/ImportServiceRole",
+                    "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.150.0"
@@ -626,7 +626,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/Resource",
+                    "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -665,11 +665,11 @@
                   },
                   "DefaultPolicy": {
                     "id": "DefaultPolicy",
-                    "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy",
+                    "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy/Resource",
+                        "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
@@ -797,11 +797,11 @@
               },
               "Code": {
                 "id": "Code",
-                "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/Code",
+                "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/Code/Stage",
+                    "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.150.0"
@@ -809,7 +809,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/Code/AssetBucket",
+                    "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.150.0"
@@ -823,7 +823,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/Resource",
+                "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -841,7 +841,7 @@
                         }
                       }
                     },
-                    "handler": "Midianita.Workers.ProcessadorArte::Midianita.Workers.ProcessadorArte.Function::FunctionHandler",
+                    "handler": "Bezalel.Workers.ProcessadorArte::Bezalel.Workers.ProcessadorArte.Function::FunctionHandler",
                     "memorySize": 512,
                     "role": {
                       "Fn::GetAtt": [
@@ -858,13 +858,13 @@
                   "version": "2.150.0"
                 }
               },
-              "SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23": {
-                "id": "SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23",
-                "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23",
+              "SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23": {
+                "id": "SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23",
+                "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "MidianitaInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23/Resource",
+                    "path": "BezalelInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::EventSourceMapping",
                       "aws:cdk:cloudformation:props": {
@@ -899,7 +899,7 @@
           },
           "Region": {
             "id": "Region",
-            "path": "MidianitaInfrastructureIaCStack/Region",
+            "path": "BezalelInfrastructureIaCStack/Region",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.150.0"
@@ -907,7 +907,7 @@
           },
           "QueueUrl": {
             "id": "QueueUrl",
-            "path": "MidianitaInfrastructureIaCStack/QueueUrl",
+            "path": "BezalelInfrastructureIaCStack/QueueUrl",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.150.0"
@@ -915,7 +915,7 @@
           },
           "S3BucketName": {
             "id": "S3BucketName",
-            "path": "MidianitaInfrastructureIaCStack/S3BucketName",
+            "path": "BezalelInfrastructureIaCStack/S3BucketName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.150.0"
@@ -923,7 +923,7 @@
           },
           "DesignsTableName": {
             "id": "DesignsTableName",
-            "path": "MidianitaInfrastructureIaCStack/DesignsTableName",
+            "path": "BezalelInfrastructureIaCStack/DesignsTableName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.150.0"
@@ -931,7 +931,7 @@
           },
           "AuditTableName": {
             "id": "AuditTableName",
-            "path": "MidianitaInfrastructureIaCStack/AuditTableName",
+            "path": "BezalelInfrastructureIaCStack/AuditTableName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.150.0"
@@ -939,11 +939,11 @@
           },
           "CDKMetadata": {
             "id": "CDKMetadata",
-            "path": "MidianitaInfrastructureIaCStack/CDKMetadata",
+            "path": "BezalelInfrastructureIaCStack/CDKMetadata",
             "children": {
               "Default": {
                 "id": "Default",
-                "path": "MidianitaInfrastructureIaCStack/CDKMetadata/Default",
+                "path": "BezalelInfrastructureIaCStack/CDKMetadata/Default",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.150.0"
@@ -957,7 +957,7 @@
           },
           "BootstrapVersion": {
             "id": "BootstrapVersion",
-            "path": "MidianitaInfrastructureIaCStack/BootstrapVersion",
+            "path": "BezalelInfrastructureIaCStack/BootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
               "version": "2.150.0"
@@ -965,7 +965,7 @@
           },
           "CheckBootstrapVersion": {
             "id": "CheckBootstrapVersion",
-            "path": "MidianitaInfrastructureIaCStack/CheckBootstrapVersion",
+            "path": "BezalelInfrastructureIaCStack/CheckBootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.150.0"

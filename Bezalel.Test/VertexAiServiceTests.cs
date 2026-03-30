@@ -1,12 +1,12 @@
 using System.Net;
 using FluentAssertions;
-using Midianita.Core.Interfaces;
-using Midianita.Infrastructure.Services;
+using Bezalel.Core.Interfaces;
+using Bezalel.Infrastructure.Services;
 using Moq;
 using Moq.Protected;
 using Xunit;
 
-namespace Midianita.Test
+namespace Bezalel.Test
 {
     public class VertexAiServiceTests
     {

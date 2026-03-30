@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Midianita.Core.Entities
+namespace Bezalel.Core.Entities
 {
     internal class Category
     {

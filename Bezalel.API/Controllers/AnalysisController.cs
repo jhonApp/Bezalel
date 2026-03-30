@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Midianita.Core.DTOs;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.DTOs;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.API.Controllers
+namespace Bezalel.API.Controllers
 {
 
     [ApiController]

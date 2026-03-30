@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Midianita.Core\Midianita.Core.csproj" />
+    <ProjectReference Include="..\Bezalel.Core\Bezalel.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

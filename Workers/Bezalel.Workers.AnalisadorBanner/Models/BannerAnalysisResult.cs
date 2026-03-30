@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.AnalisadorBanner.Models;
+namespace Bezalel.Workers.AnalisadorBanner.Models;
 
 /// <summary>
 /// Result deserialized from the vision model JSON response.

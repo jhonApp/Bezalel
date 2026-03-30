@@ -1,9 +1,9 @@
 using Amazon.Lambda.Core;
-using Midianita.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.ProcessadorArte.Models;
 using SkiaSharp;
 using System.IO;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 public sealed class ImageCompositionService : IImageCompositionService
 {

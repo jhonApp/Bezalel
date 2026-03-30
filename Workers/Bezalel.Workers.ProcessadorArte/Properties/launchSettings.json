@@ -7,10 +7,10 @@
       "workingDirectory": "$(ProjectDir)",
       "environmentVariables": {
         "AWS_REGION": "us-east-1",
-        "GOOGLE_APPLICATION_CREDENTIALS": "D:\\Project\\Midianita\\keys\\mythic-inn-144217-714b072b2303.json",
+        "GOOGLE_APPLICATION_CREDENTIALS": "D:\\Project\\Bezalel\\keys\\mythic-inn-144217-714b072b2303.json",
         "GOOGLE_PROJECT_ID": "mythic-inn-144217",
         "GOOGLE_LOCATION": "us-central1",
-        "OUTPUT_S3_BUCKET": "midianita-dev-assets"
+        "OUTPUT_S3_BUCKET": "Bezalel-dev-assets"
       }
     }
   }

@@ -3,7 +3,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using SixLabors.ImageSharp;
 
-namespace Midianita.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.AnalisadorBanner.Services;
 
 /// <summary>
 /// Downloads an image from a private S3 bucket, extracts its pixel dimensions

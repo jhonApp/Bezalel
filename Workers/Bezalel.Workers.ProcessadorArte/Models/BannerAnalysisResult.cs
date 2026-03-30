@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.ProcessadorArte.Models;
 
 /// <summary>
 /// Design metadata produced by the AnalisadorBanner worker and stored in DynamoDB.

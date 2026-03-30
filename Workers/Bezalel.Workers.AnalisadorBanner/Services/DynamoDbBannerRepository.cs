@@ -1,17 +1,17 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.Core;
-using Midianita.Workers.AnalisadorBanner.Models;
+using Bezalel.Workers.AnalisadorBanner.Models;
 using System.Text.Json;
 
-namespace Midianita.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.AnalisadorBanner.Services;
 
 /// <summary>
-/// Persists banner analysis results to the <c>Midianita_Dev_Banner</c> DynamoDB table.
+/// Persists banner analysis results to the <c>Bezalel_Dev_Banner</c> DynamoDB table.
 /// </summary>
 public sealed class DynamoDbBannerRepository : IBannerRepository
 {
-    private const string TableName = "Midianita_Dev_Banner";
+    private const string TableName = "Bezalel_Dev_Banner";
 
     private readonly IAmazonDynamoDB _dynamoClient;
 

@@ -1,4 +1,4 @@
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     public interface ICryptographyService
     {

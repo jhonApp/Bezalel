@@ -1,14 +1,14 @@
 using FluentAssertions;
-using Midianita.Aplication.Service;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Aplication.Service;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Midianita.Test
+namespace Bezalel.Test
 {
     public class AuthServiceTests
     {

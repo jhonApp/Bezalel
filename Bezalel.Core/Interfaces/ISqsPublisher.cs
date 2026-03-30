@@ -1,6 +1,6 @@
-using Midianita.Core.DTOs;
+using Bezalel.Core.DTOs;
 
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     /// <summary>
     /// Publishes messages to the SQS Analysis Queue.

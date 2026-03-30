@@ -1,19 +1,19 @@
 {
   "version": "36.0.0",
   "artifacts": {
-    "MidianitaInfrastructureIaCStack.assets": {
+    "BezalelInfrastructureIaCStack.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "MidianitaInfrastructureIaCStack.assets.json",
+        "file": "BezalelInfrastructureIaCStack.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "MidianitaInfrastructureIaCStack": {
+    "BezalelInfrastructureIaCStack": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://633574826164/us-east-1",
       "properties": {
-        "templateFile": "MidianitaInfrastructureIaCStack.template.json",
+        "templateFile": "BezalelInfrastructureIaCStack.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::633574826164:role/cdk-hnb659fds-deploy-role-633574826164-us-east-1",
@@ -22,7 +22,7 @@
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "MidianitaInfrastructureIaCStack.assets"
+          "BezalelInfrastructureIaCStack.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::633574826164:role/cdk-hnb659fds-lookup-role-633574826164-us-east-1",
@@ -31,10 +31,10 @@
         }
       },
       "dependencies": [
-        "MidianitaInfrastructureIaCStack.assets"
+        "BezalelInfrastructureIaCStack.assets"
       ],
       "metadata": {
-        "/MidianitaInfrastructureIaCStack/DesignsTable": [
+        "/BezalelInfrastructureIaCStack/DesignsTable": [
           {
             "type": "aws:cdk:hasPhysicalName",
             "data": {
@@ -42,13 +42,13 @@
             }
           }
         ],
-        "/MidianitaInfrastructureIaCStack/DesignsTable/Resource": [
+        "/BezalelInfrastructureIaCStack/DesignsTable/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "DesignsTableBF64AC56"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AuditTable": [
+        "/BezalelInfrastructureIaCStack/AuditTable": [
           {
             "type": "aws:cdk:hasPhysicalName",
             "data": {
@@ -56,146 +56,146 @@
             }
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AuditTable/Resource": [
+        "/BezalelInfrastructureIaCStack/AuditTable/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AuditTableB07F8EEB"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AuditQueue/Resource": [
+        "/BezalelInfrastructureIaCStack/AuditQueue/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AuditQueue1D3C234B"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AssetsBucket/Resource": [
+        "/BezalelInfrastructureIaCStack/AssetsBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AssetsBucket5CB76180"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AssetsBucket/Policy/Resource": [
+        "/BezalelInfrastructureIaCStack/AssetsBucket/Policy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AssetsBucketPolicyFFACF6C4"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource/Default": [
+        "/BezalelInfrastructureIaCStack/AssetsBucket/AutoDeleteObjectsCustomResource/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AssetsBucketAutoDeleteObjectsCustomResource51BA1286"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+        "/BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+        "/BezalelInfrastructureIaCStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/Resource": [
+        "/BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AnalisadorBannerFunctionServiceRole182BE8EF"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy/Resource": [
+        "/BezalelInfrastructureIaCStack/AnalisadorBannerFunction/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AnalisadorBannerFunctionServiceRoleDefaultPolicy18FE9880"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/Resource": [
+        "/BezalelInfrastructureIaCStack/AnalisadorBannerFunction/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AnalisadorBannerFunctionD250AEEB"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23/Resource": [
+        "/BezalelInfrastructureIaCStack/AnalisadorBannerFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AnalisadorBannerFunctionSqsEventSourceMidianitaInfrastructureIaCStackAuditQueue0D9D3E2394B63C89"
+            "data": "AnalisadorBannerFunctionSqsEventSourceBezalelInfrastructureIaCStackAuditQueue0D9D3E2394B63C89"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/Resource": [
+        "/BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ProcessadorArteFunctionServiceRole591DC134"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy/Resource": [
+        "/BezalelInfrastructureIaCStack/ProcessadorArteFunction/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ProcessadorArteFunctionServiceRoleDefaultPolicy0C7E8F8C"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/ProcessadorArteFunction/Resource": [
+        "/BezalelInfrastructureIaCStack/ProcessadorArteFunction/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ProcessadorArteFunctionEE323EF8"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:MidianitaInfrastructureIaCStackAuditQueue0D9D3E23/Resource": [
+        "/BezalelInfrastructureIaCStack/ProcessadorArteFunction/SqsEventSource:BezalelInfrastructureIaCStackAuditQueue0D9D3E23/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ProcessadorArteFunctionSqsEventSourceMidianitaInfrastructureIaCStackAuditQueue0D9D3E23CA2BF57D"
+            "data": "ProcessadorArteFunctionSqsEventSourceBezalelInfrastructureIaCStackAuditQueue0D9D3E23CA2BF57D"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/Region": [
+        "/BezalelInfrastructureIaCStack/Region": [
           {
             "type": "aws:cdk:logicalId",
             "data": "Region"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/QueueUrl": [
+        "/BezalelInfrastructureIaCStack/QueueUrl": [
           {
             "type": "aws:cdk:logicalId",
             "data": "QueueUrl"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/S3BucketName": [
+        "/BezalelInfrastructureIaCStack/S3BucketName": [
           {
             "type": "aws:cdk:logicalId",
             "data": "S3BucketName"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/DesignsTableName": [
+        "/BezalelInfrastructureIaCStack/DesignsTableName": [
           {
             "type": "aws:cdk:logicalId",
             "data": "DesignsTableName"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/AuditTableName": [
+        "/BezalelInfrastructureIaCStack/AuditTableName": [
           {
             "type": "aws:cdk:logicalId",
             "data": "AuditTableName"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/CDKMetadata/Default": [
+        "/BezalelInfrastructureIaCStack/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadata"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/BootstrapVersion": [
+        "/BezalelInfrastructureIaCStack/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/MidianitaInfrastructureIaCStack/CheckBootstrapVersion": [
+        "/BezalelInfrastructureIaCStack/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "MidianitaInfrastructureIaCStack"
+      "displayName": "BezalelInfrastructureIaCStack"
     },
     "Tree": {
       "type": "cdk:tree",

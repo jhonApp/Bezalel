@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Midianita.Aplication.Interface;
-using Midianita.Aplication.ViewModel;
+using Bezalel.Aplication.Interface;
+using Bezalel.Aplication.ViewModel;
 
-namespace Midianita.API.Controllers
+namespace Bezalel.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

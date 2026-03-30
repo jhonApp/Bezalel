@@ -7,8 +7,8 @@
     <AWSProjectType>Lambda</AWSProjectType>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PublishReadyToRun>false</PublishReadyToRun>
-    <RootNamespace>Midianita.Workers.ProcessadorArte</RootNamespace>
-    <AssemblyName>Midianita.Workers.ProcessadorArte</AssemblyName>
+    <RootNamespace>Bezalel.Workers.ProcessadorArte</RootNamespace>
+    <AssemblyName>Bezalel.Workers.ProcessadorArte</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

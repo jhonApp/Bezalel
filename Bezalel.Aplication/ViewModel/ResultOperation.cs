@@ -1,4 +1,4 @@
-namespace Midianita.Aplication.ViewModel
+namespace Bezalel.Aplication.ViewModel
 {
     public class ResultOperation
     {

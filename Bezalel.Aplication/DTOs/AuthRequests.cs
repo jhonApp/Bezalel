@@ -1,4 +1,4 @@
-namespace Midianita.Aplication.DTOs
+namespace Bezalel.Aplication.DTOs
 {
     public class RegisterRequest
     {

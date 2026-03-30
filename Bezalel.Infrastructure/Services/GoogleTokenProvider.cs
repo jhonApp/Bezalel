@@ -1,7 +1,7 @@
 using Google.Apis.Auth.OAuth2;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class GoogleTokenProvider : ITokenProvider
     {

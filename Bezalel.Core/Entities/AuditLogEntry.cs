@@ -1,6 +1,6 @@
 using System;
 
-namespace Midianita.Core.Entities
+namespace Bezalel.Core.Entities
 {
     public class AuditLogEntry
     {

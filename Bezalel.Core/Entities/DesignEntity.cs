@@ -1,6 +1,6 @@
 using System;
 
-namespace Midianita.Core.Entities
+namespace Bezalel.Core.Entities
 {
     /// <summary>
     /// Domain Layer: Entity representing an image design

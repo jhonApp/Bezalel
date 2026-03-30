@@ -1,4 +1,4 @@
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     /// <summary>
     /// Repository contract for Banner analysis records in DynamoDB.

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     public interface IVertexAiService
     {

@@ -38,12 +38,12 @@ If already installed check if new version is available.
 
 Execute unit tests
 ```
-    cd "Midianita.Workers.ProcessadorArte/test/Midianita.Workers.ProcessadorArte.Tests"
+    cd "Bezalel.Workers.ProcessadorArte/test/Bezalel.Workers.ProcessadorArte.Tests"
     dotnet test
 ```
 
 Deploy function to AWS Lambda
 ```
-    cd "Midianita.Workers.ProcessadorArte/src/Midianita.Workers.ProcessadorArte"
+    cd "Bezalel.Workers.ProcessadorArte/src/Bezalel.Workers.ProcessadorArte"
     dotnet lambda deploy-function
 ```

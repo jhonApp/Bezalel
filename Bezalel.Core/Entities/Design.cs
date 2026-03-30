@@ -1,7 +1,7 @@
 using Amazon.DynamoDBv2.DataModel;
 using System;
 
-namespace Midianita.Core.Entities
+namespace Bezalel.Core.Entities
 {
     public class Design
     {

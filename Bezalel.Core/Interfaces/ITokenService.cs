@@ -1,6 +1,6 @@
-using Midianita.Core.Entities;
+using Bezalel.Core.Entities;
 
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     public interface ITokenService
     {

@@ -1,11 +1,11 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Configuration;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class VertexAiService : IVertexAiService
     {

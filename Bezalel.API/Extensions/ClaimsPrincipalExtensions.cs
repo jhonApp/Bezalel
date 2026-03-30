@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Midianita.API.Extensions
+namespace Bezalel.API.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {

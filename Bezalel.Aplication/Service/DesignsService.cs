@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Midianita.Aplication.Interface;
-using Midianita.Aplication.ViewModel;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Aplication.Interface;
+using Bezalel.Aplication.ViewModel;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.Aplication.Service
+namespace Bezalel.Aplication.Service
 {
     public class DesignsService : IDesignsService
     {

@@ -4,13 +4,13 @@ using Amazon.S3;
 using Amazon.SQS;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Midianita.Aplication.Interface;
-using Midianita.Aplication.Service;
-using Midianita.Core.Interfaces;
-using Midianita.Infrastructure.Repositories;
-using Midianita.Infrastructure.Services;
+using Bezalel.Aplication.Interface;
+using Bezalel.Aplication.Service;
+using Bezalel.Core.Interfaces;
+using Bezalel.Infrastructure.Repositories;
+using Bezalel.Infrastructure.Services;
 
-namespace Midianita.Ioc
+namespace Bezalel.Ioc
 {
     public static class DependencyContainer
     {
@@ -60,7 +60,7 @@ namespace Midianita.Ioc
             services.AddScoped<IBannerRepository>(sp =>
             {
                 var client = sp.GetRequiredService<IAmazonDynamoDB>();
-                var tableName = configuration["DynamoDb:BannerTableName"] ?? "Midianita_Dev_Banner";
+                var tableName = configuration["DynamoDb:BannerTableName"] ?? "Bezalel_Dev_Banner";
                 return new DynamoDbBannerAnalysisRepository(client, tableName);
             });
 

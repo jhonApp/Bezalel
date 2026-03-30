@@ -1,6 +1,6 @@
 using Amazon.Lambda.Core;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 public interface IFalApiService
 {

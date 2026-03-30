@@ -1,10 +1,10 @@
 using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.Infrastructure.Services
+namespace Bezalel.Infrastructure.Services
 {
     public class SqsAuditPublisher : IAuditPublisher
     {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.Filters;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.API.Filters
+namespace Bezalel.API.Filters
 {
     public class AuditActionFilter : IAsyncActionFilter
     {

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Midianita.API.Extensions
+namespace Bezalel.API.Extensions
 {
     public static class AuthExtensions
     {

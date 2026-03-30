@@ -1,6 +1,6 @@
 using Amazon.Lambda.Core;
 
-namespace Midianita.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.AnalisadorBanner.Services;
 
 /// <summary>
 /// Downloads an image from object storage and returns its Base64 data-URI

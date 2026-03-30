@@ -1,8 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.Infrastructure.Repositories
+namespace Bezalel.Infrastructure.Repositories
 {
     public class DynamoDbBannerAnalysisRepository : IBannerRepository
     {

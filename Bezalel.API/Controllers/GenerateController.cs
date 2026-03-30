@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Midianita.Core.DTOs;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.DTOs;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace Midianita.API.Controllers
+namespace Bezalel.API.Controllers
 {
     /// <summary>
     /// API/Presentation Layer: Controller handling generation requests

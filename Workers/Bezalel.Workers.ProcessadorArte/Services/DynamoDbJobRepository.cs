@@ -1,19 +1,19 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.Core;
-using Midianita.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.ProcessadorArte.Models;
 using System.Text.Json;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
 /// Reads banner metadata and updates job status records in DynamoDB.
 /// </summary>
 public sealed class DynamoDbJobRepository : IDynamoDbJobRepository
 {
-    private readonly string _bannerTable = Environment.GetEnvironmentVariable("DYNAMODB_BANNER_TABLE") ?? "Midianita_Dev_Banner";
+    private readonly string _bannerTable = Environment.GetEnvironmentVariable("DYNAMODB_BANNER_TABLE") ?? "Bezalel_Dev_Banner";
     
-    private readonly string _jobTable = Environment.GetEnvironmentVariable("DYNAMODB_JOB_TABLE") ?? "Midianita_Dev_Job";
+    private readonly string _jobTable = Environment.GetEnvironmentVariable("DYNAMODB_JOB_TABLE") ?? "Bezalel_Dev_Job";
 
     private readonly IAmazonDynamoDB _dynamo;
 

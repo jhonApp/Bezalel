@@ -1,5 +1,5 @@
 using Amazon.Lambda.Core;
-using Midianita.Workers.AnalisadorBanner.Models;
+using Bezalel.Workers.AnalisadorBanner.Models;
 using Polly;
 using Polly.Retry;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Midianita.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.AnalisadorBanner.Services;
 
 /// <summary>
 /// Sends an image to Anthropic Claude 3.5 Sonnet and returns the

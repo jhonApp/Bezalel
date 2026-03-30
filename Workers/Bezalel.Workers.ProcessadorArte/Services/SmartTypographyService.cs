@@ -1,6 +1,6 @@
 using SkiaSharp;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
 /// Responsive typography engine that auto-fits multi-line text into a bounding box.

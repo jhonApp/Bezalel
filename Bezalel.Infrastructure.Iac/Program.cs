@@ -1,13 +1,13 @@
 using Amazon.CDK;
 
-namespace Midianita.Infrastructure.IaC
+namespace Bezalel.Infrastructure.IaC
 {
     sealed class Program
     {
         public static void Main(string[] args)
         {
             var app = new App();
-            new MidianitaInfrastructureIaCStack(app, "MidianitaInfrastructureIaCStack", new StackProps
+            new BezalelInfrastructureIaCStack(app, "BezalelInfrastructureIaCStack", new StackProps
             {
                 Env = new Amazon.CDK.Environment
                 {

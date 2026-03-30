@@ -1,8 +1,8 @@
-using Midianita.Core.Entities;
+using Bezalel.Core.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Midianita.Core.Interfaces
+namespace Bezalel.Core.Interfaces
 {
     public interface IRefreshTokenRepository
     {

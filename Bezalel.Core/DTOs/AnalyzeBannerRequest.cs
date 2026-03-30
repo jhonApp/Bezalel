@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Midianita.Core.DTOs
+namespace Bezalel.Core.DTOs
 {
     /// <summary>
     /// Request DTO for the banner analysis endpoint.

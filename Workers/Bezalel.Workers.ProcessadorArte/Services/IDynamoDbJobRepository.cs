@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
-using Midianita.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.ProcessadorArte.Models;
 
-namespace Midianita.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
 /// Reads banner metadata from DynamoDB and updates job status records.

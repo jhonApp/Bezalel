@@ -2,7 +2,7 @@ using Amazon.DynamoDBv2.DataModel;
 using System;
 using System.Collections.Generic;
 
-namespace Midianita.Core.Entities
+namespace Bezalel.Core.Entities
 {
     public class User
     {

@@ -1,12 +1,12 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Midianita.Infrastructure.Repositories
+namespace Bezalel.Infrastructure.Repositories
 {
     public class DynamoDbUserRepository : IUserRepository
     {
@@ -16,7 +16,7 @@ namespace Midianita.Infrastructure.Repositories
         public DynamoDbUserRepository(IDynamoDBContext context, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _context = context;
-            var tableName = configuration["DynamoDb:User"] ?? "User_Midianita";
+            var tableName = configuration["DynamoDb:User"] ?? "User_Bezalel";
             _config = new DynamoDBOperationConfig { OverrideTableName = tableName };
         }
 

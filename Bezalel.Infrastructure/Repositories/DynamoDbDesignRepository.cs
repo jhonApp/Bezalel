@@ -1,16 +1,16 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Midianita.Core.Entities;
-using Midianita.Core.Interfaces;
+using Bezalel.Core.Entities;
+using Bezalel.Core.Interfaces;
 
-namespace Midianita.Infrastructure.Repositories
+namespace Bezalel.Infrastructure.Repositories
 {
     public class DynamoDbDesignRepository : IDesignRepository
     {
         private readonly DynamoDBContext _context;
         private readonly string _tableName;
 
-        public DynamoDbDesignRepository(IAmazonDynamoDB dynamoDbClient, string tableName = "Midianita_Dev_Designs")
+        public DynamoDbDesignRepository(IAmazonDynamoDB dynamoDbClient, string tableName = "Bezalel_Dev_Designs")
         {
             _context = new DynamoDBContext(dynamoDbClient);
             _tableName = tableName;
