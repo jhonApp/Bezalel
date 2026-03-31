@@ -4,28 +4,32 @@ using SkiaSharp;
 namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
-/// Composes the final banner using a strict 4-layer Z-index system:
-///   Layer 1 — AI-generated background (clean, no text)
-///   Layer 2 — Background text (tipo="background", drawn BEHIND the person)
-///   Layer 3 — Person cutout (scaled, anchored, filtered)
-///   Layer 4 — Foreground text (titulo, info, data — drawn ON TOP of everything)
+/// Renders individual carousel slides using SkiaSharp.
+/// Composition layers (bottom to top):
+///   1 — AI-generated background (clean, no text)
+///   2 — Headline text
+///   3 — Body text (optional)
+///   4 — Call to Action pill (optional, last slide)
 /// </summary>
 public sealed class SkiaRendererService : ISkiaRendererService
 {
     private const string DefaultFontFamily = "Arial";
     private const int    ShadowOffset      = 3;
     private const byte   ShadowAlpha       = 153; // ~60% opacity
+    private const int    Margin            = 60;
 
-    public byte[] RenderFinalBanner(
-        LayoutRulesV2 layout,
+    public byte[] RenderSlide(
+        SlideRecord slide,
+        PaletteRecord palette,
         byte[] backgroundBytes,
-        byte[] personBytes,
         int canvasWidth  = 1080,
-        int canvasHeight = 1350)
+        int canvasHeight = 1080)
     {
         using var surface = SKSurface.Create(new SKImageInfo(canvasWidth, canvasHeight));
         var canvas = surface.Canvas;
-        canvas.Clear(SKColors.Black);
+
+        // Fill with palette background color as fallback
+        canvas.Clear(ParseHexColor(palette.BackgroundColor));
 
         // ═══════════════════════════════════════════════════════════════════
         //  LAYER 1 — BACKGROUND (AI-generated clean image)
@@ -33,39 +37,50 @@ public sealed class SkiaRendererService : ISkiaRendererService
         DrawBackground(canvas, backgroundBytes, canvasWidth, canvasHeight);
 
         // ═══════════════════════════════════════════════════════════════════
-        //  LAYER 2 — BACKGROUND TEXT (giant decorative text BEHIND the person)
+        //  LAYER 2 — Semi-transparent overlay for text legibility
         // ═══════════════════════════════════════════════════════════════════
-        if (layout?.Textos is { Count: > 0 })
-        {
-            var bgTexts = layout.Textos
-                .Where(t => t?.Tipo != null && t.Tipo.Equals("background", StringComparison.OrdinalIgnoreCase))
-                .ToList();
+        DrawTextOverlay(canvas, canvasWidth, canvasHeight, palette.BackgroundColor);
 
-            DrawTextElements(canvas, bgTexts, canvasWidth);
+        // ═══════════════════════════════════════════════════════════════════
+        //  LAYER 3 — HEADLINE TEXT
+        // ═══════════════════════════════════════════════════════════════════
+        var layout = slide.Layout;
+        var textAlign = ResolveTextAlign(layout.TextAlignment);
+        var headlineWeight = ResolveFontWeight(layout.HeadlineFontWeight);
+        var headlineColor = ParseHexColor(layout.HeadlineColor);
+        var bodyColor = ParseHexColor(layout.BodyColor);
+
+        float yOffset = ResolveYStart(layout.TextPosition, canvasHeight);
+
+        // Draw headline
+        yOffset = DrawTextBlock(
+            canvas, slide.Headline, yOffset,
+            layout.HeadlineFontSize, headlineWeight, headlineColor,
+            textAlign, canvasWidth);
+
+        // ═══════════════════════════════════════════════════════════════════
+        //  LAYER 4 — BODY TEXT (optional)
+        // ═══════════════════════════════════════════════════════════════════
+        if (!string.IsNullOrWhiteSpace(slide.Body))
+        {
+            yOffset += 30; // spacing between headline and body
+            yOffset = DrawTextBlock(
+                canvas, slide.Body, yOffset,
+                layout.BodyFontSize, SKFontStyleWeight.Normal, bodyColor,
+                textAlign, canvasWidth);
         }
 
         // ═══════════════════════════════════════════════════════════════════
-        //  LAYER 3 — PERSON CUTOUT (scaled, anchored, filtered)
+        //  LAYER 5 — CTA PILL (optional, typically on last slide)
         // ═══════════════════════════════════════════════════════════════════
-        if (personBytes is { Length: > 0 } && layout?.Pessoa is not null)
+        if (!string.IsNullOrWhiteSpace(slide.CallToAction))
         {
-            DrawPerson(canvas, personBytes, layout.Pessoa, canvasWidth, canvasHeight);
+            var accentColor = ParseHexColor(palette.AccentColor);
+            DrawCtaPill(canvas, slide.CallToAction, accentColor, canvasWidth, canvasHeight);
         }
 
         // ═══════════════════════════════════════════════════════════════════
-        //  LAYER 4 — FOREGROUND TEXT (titulo, info, data — on top of everything)
-        // ═══════════════════════════════════════════════════════════════════
-        if (layout?.Textos is { Count: > 0 })
-        {
-            var fgTexts = layout.Textos
-                .Where(t => t?.Tipo == null || !t.Tipo.Equals("background", StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            DrawTextElements(canvas, fgTexts, canvasWidth);
-        }
-
-        // ═══════════════════════════════════════════════════════════════════
-        //  ENCODE — PNG output (lossless, preserves transparency edges)
+        //  ENCODE — PNG output
         // ═══════════════════════════════════════════════════════════════════
         using var snapshot = surface.Snapshot();
         using var encoded  = snapshot.Encode(SKEncodedImageFormat.Png, 100);
@@ -73,7 +88,7 @@ public sealed class SkiaRendererService : ISkiaRendererService
     }
 
     // ───────────────────────────────────────────────────────────────────────
-    //  LAYER 1 IMPL — Background
+    //  LAYER 1 — Background
     // ───────────────────────────────────────────────────────────────────────
 
     private static void DrawBackground(SKCanvas canvas, byte[]? bgBytes, int w, int h)
@@ -89,208 +104,131 @@ public sealed class SkiaRendererService : ISkiaRendererService
     }
 
     // ───────────────────────────────────────────────────────────────────────
-    //  LAYER 3 IMPL — Person Cutout
+    //  LAYER 2 — Overlay for legibility
     // ───────────────────────────────────────────────────────────────────────
 
-    private static void DrawPerson(
-        SKCanvas canvas, byte[] personBytes, PessoaLayout pessoa, int canvasW, int canvasH)
+    private static void DrawTextOverlay(SKCanvas canvas, int w, int h, string bgColorHex)
     {
-        using var data  = SKData.CreateCopy(personBytes);
-        using var image = SKImage.FromEncodedData(data);
-        if (image is null) return;
-
-        // ── Scale ──────────────────────────────────────────────────────────
-        float scale       = Math.Clamp(pessoa.Scale, 0.1f, 1.0f);
-        float targetH     = canvasH * scale;
-        float aspectRatio = (float)image.Width / image.Height;
-        float targetW     = targetH * aspectRatio;
-
-        // ── Anchor ─────────────────────────────────────────────────────────
-        var (x, y) = ResolveAnchor(pessoa.Anchor, canvasW, canvasH, targetW, targetH);
-        y += pessoa.OffsetY;
-
-        var destRect = new SKRect(x, y, x + targetW, y + targetH);
-
-        // ── Filters ────────────────────────────────────────────────────────
-        using var paint = new SKPaint { FilterQuality = SKFilterQuality.High };
-        ApplyFilters(paint, pessoa.Filters);
-
-        // ── Draw ───────────────────────────────────────────────────────────
-        canvas.DrawImage(image, destRect, paint);
+        var bgColor = ParseHexColor(bgColorHex);
+        using var overlayPaint = new SKPaint
+        {
+            Color = new SKColor(bgColor.Red, bgColor.Green, bgColor.Blue, 140), // ~55% opacity
+            Style = SKPaintStyle.Fill
+        };
+        canvas.DrawRect(0, 0, w, h, overlayPaint);
     }
 
-    private static (float X, float Y) ResolveAnchor(
-        string? anchor, int canvasW, int canvasH, float imgW, float imgH)
+    // ───────────────────────────────────────────────────────────────────────
+    //  Text Block Drawing
+    // ───────────────────────────────────────────────────────────────────────
+
+    private float DrawTextBlock(
+        SKCanvas canvas, string text, float startY,
+        int fontSize, SKFontStyleWeight weight, SKColor color,
+        SKTextAlign align, int canvasWidth)
     {
-        return (anchor?.ToLowerInvariant() ?? "bottom-center") switch
+        if (string.IsNullOrWhiteSpace(text)) return startY;
+
+        using var typeface = SKTypeface.FromFamilyName(
+            DefaultFontFamily, weight, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright)
+            ?? SKTypeface.Default;
+
+        using var paint = new SKPaint
         {
-            "bottom-center" => ((canvasW - imgW) / 2f,  canvasH - imgH),
-            "bottom-right"  => (canvasW - imgW,          canvasH - imgH),
-            "bottom-left"   => (0f,                      canvasH - imgH),
-            "center-right"  => (canvasW - imgW,          (canvasH - imgH) / 2f),
-            "center-left"   => (0f,                      (canvasH - imgH) / 2f),
-            _               => ((canvasW - imgW) / 2f,  canvasH - imgH), // fallback → bottom-center
+            IsAntialias = true,
+            Color       = color,
+            TextSize    = fontSize,
+            TextAlign   = align,
+            Typeface    = typeface
+        };
+
+        using var shadowPaint = new SKPaint
+        {
+            IsAntialias = true,
+            Color       = new SKColor(0, 0, 0, ShadowAlpha),
+            TextSize    = fontSize,
+            TextAlign   = align,
+            Typeface    = typeface
+        };
+
+        float maxWidth = canvasWidth - (Margin * 2);
+        var lines = WrapWords(text, paint, maxWidth);
+        float lineHeight = paint.FontMetrics.Descent - paint.FontMetrics.Ascent;
+        float xPos = ResolveTextX(align, canvasWidth);
+        float y = startY;
+
+        foreach (var line in lines)
+        {
+            canvas.DrawText(line, xPos + ShadowOffset, y + ShadowOffset, shadowPaint);
+            canvas.DrawText(line, xPos, y, paint);
+            y += lineHeight + 8; // 8px line spacing
+        }
+
+        return y;
+    }
+
+    // ───────────────────────────────────────────────────────────────────────
+    //  CTA Pill
+    // ───────────────────────────────────────────────────────────────────────
+
+    private static void DrawCtaPill(SKCanvas canvas, string ctaText, SKColor accentColor, int canvasWidth, int canvasHeight)
+    {
+        using var typeface = SKTypeface.FromFamilyName(
+            DefaultFontFamily, SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright)
+            ?? SKTypeface.Default;
+
+        using var textPaint = new SKPaint
+        {
+            IsAntialias = true,
+            Color       = SKColors.White,
+            TextSize    = 40,
+            TextAlign   = SKTextAlign.Center,
+            Typeface    = typeface
+        };
+
+        float textWidth = textPaint.MeasureText(ctaText);
+        float pillWidth = textWidth + 80;
+        float pillHeight = 70;
+        float pillX = (canvasWidth - pillWidth) / 2f;
+        float pillY = canvasHeight - 140;
+
+        // Draw rounded rect background
+        using var pillPaint = new SKPaint
+        {
+            IsAntialias = true,
+            Color       = accentColor,
+            Style       = SKPaintStyle.Fill
+        };
+
+        var pillRect = new SKRoundRect(new SKRect(pillX, pillY, pillX + pillWidth, pillY + pillHeight), 35);
+        canvas.DrawRoundRect(pillRect, pillPaint);
+
+        // Draw CTA text centered in pill
+        float textY = pillY + (pillHeight / 2f) - (textPaint.FontMetrics.Ascent / 2f) - (textPaint.FontMetrics.Descent / 2f);
+        canvas.DrawText(ctaText, canvasWidth / 2f, textY, textPaint);
+    }
+
+    // ───────────────────────────────────────────────────────────────────────
+    //  Helpers
+    // ───────────────────────────────────────────────────────────────────────
+
+    private static float ResolveYStart(string? textPosition, int canvasHeight)
+    {
+        return (textPosition?.ToLowerInvariant() ?? "center") switch
+        {
+            "top"    => Margin + 80,
+            "bottom" => canvasHeight * 0.55f,
+            _        => canvasHeight * 0.3f, // center (default)
         };
     }
-
-    private static void ApplyFilters(SKPaint paint, List<string>? filters)
-    {
-        if (filters is null || filters.Count == 0) return;
-
-        SKColorFilter? combined = null;
-
-        foreach (var filter in filters)
-        {
-            if (string.IsNullOrWhiteSpace(filter)) continue;
-
-            var lower = filter.ToLowerInvariant().Trim();
-            SKColorFilter? current = null;
-
-            // ── Grayscale ──────────────────────────────────────────────────
-            if (lower.Contains("grayscale"))
-            {
-                current = SKColorFilter.CreateColorMatrix(new float[]
-                {
-                    0.2126f, 0.7152f, 0.0722f, 0, 0,
-                    0.2126f, 0.7152f, 0.0722f, 0, 0,
-                    0.2126f, 0.7152f, 0.0722f, 0, 0,
-                    0,       0,       0,       1, 0
-                });
-            }
-            // ── Contrast ───────────────────────────────────────────────────
-            else if (lower.Contains("contrast"))
-            {
-                float c = ExtractNumericValue(lower, 1.15f);
-                float t = (1f - c) / 2f;
-
-                current = SKColorFilter.CreateColorMatrix(new float[]
-                {
-                    c, 0, 0, 0, t,
-                    0, c, 0, 0, t,
-                    0, 0, c, 0, t,
-                    0, 0, 0, 1, 0
-                });
-            }
-
-            if (current is not null)
-            {
-                combined = combined is null
-                    ? current
-                    : SKColorFilter.CreateCompose(current, combined);
-            }
-        }
-
-        if (combined is not null)
-        {
-            paint.ColorFilter = combined;
-        }
-    }
-
-    /// <summary>
-    /// Extracts a numeric value from a CSS-style filter string, e.g. "contrast(1.15)" → 1.15f.
-    /// </summary>
-    private static float ExtractNumericValue(string filterString, float fallback)
-    {
-        var start = filterString.IndexOf('(');
-        var end   = filterString.IndexOf(')');
-
-        if (start >= 0 && end > start)
-        {
-            var raw = filterString[(start + 1)..end]
-                        .Replace("%", "")
-                        .Trim();
-
-            if (float.TryParse(raw, System.Globalization.NumberStyles.Float,
-                               System.Globalization.CultureInfo.InvariantCulture, out var v))
-                return v;
-        }
-        return fallback;
-    }
-
-    // ───────────────────────────────────────────────────────────────────────
-    //  LAYER 2 & 4 IMPL — Text Elements (shared logic, different Z-order)
-    // ───────────────────────────────────────────────────────────────────────
-
-    private static void DrawTextElements(SKCanvas canvas, List<TextElement> textos, int canvasWidth)
-    {
-        if (textos is null || textos.Count == 0) return;
-
-        foreach (var texto in textos)
-        {
-            try
-            {
-                if (texto is null) continue;
-
-                var color     = ParseHexColor(texto.Color);
-                var textAlign = ResolveTextAlign(texto.Alignment);
-                var weight    = ResolveFontWeight(texto.FontWeight);
-
-                using var typeface = SKTypeface.FromFamilyName(
-                    DefaultFontFamily, weight, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright)
-                    ?? SKTypeface.Default;
-
-                float xPos = ResolveTextX(textAlign, canvasWidth);
-                string textContent = texto.Tipo ?? string.Empty;
-
-                using var shadowPaint = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color       = new SKColor(0, 0, 0, ShadowAlpha),
-                    TextSize    = texto.FontSize,
-                    TextAlign   = textAlign,
-                    Typeface    = typeface
-                };
-
-                using var mainPaint = new SKPaint
-                {
-                    IsAntialias = true,
-                    Color       = color,
-                    TextSize    = texto.FontSize,
-                    TextAlign   = textAlign,
-                    Typeface    = typeface
-                };
-
-                if (texto.Rotation != 0)
-                {
-                    canvas.Save();
-                    
-                    // Como os eixos da matriz se alteram, nós garantimos a medida do texto
-                    float textWidth = mainPaint.MeasureText(textContent);
-                    float textHeight = mainPaint.FontMetrics.Descent - mainPaint.FontMetrics.Ascent;
-
-                    // O Translate foca estritamente na coordenada X e Y da âncora do designer.
-                    canvas.Translate(xPos, texto.YPosition);
-                    canvas.RotateDegrees(texto.Rotation);
-
-                    // Desenhamos na origem local daquele eixo rotacionado (0,0)
-                    canvas.DrawText(textContent, ShadowOffset, ShadowOffset, shadowPaint);
-                    canvas.DrawText(textContent, 0, 0, mainPaint);
-                    
-                    canvas.Restore();
-                }
-                else
-                {
-                    canvas.DrawText(textContent, xPos + ShadowOffset, texto.YPosition + ShadowOffset, shadowPaint);
-                    canvas.DrawText(textContent, xPos, texto.YPosition, mainPaint);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[SkiaRendererService] Falha matemática/renderização ao desenhar o texto (Tipo: {texto?.Tipo}): {ex.Message}");
-                // Falha suave: ignora este texto e continua para o próximo para não quebrar todo o banner.
-            }
-        }
-    }
-
-    // ── Text Helpers ───────────────────────────────────────────────────────
 
     private static float ResolveTextX(SKTextAlign align, int canvasWidth)
     {
         return align switch
         {
             SKTextAlign.Center => canvasWidth / 2f,
-            SKTextAlign.Right  => canvasWidth - 40f,  // 40px right margin
-            _                  => 40f                  // 40px left margin
+            SKTextAlign.Right  => canvasWidth - Margin,
+            _                  => Margin
         };
     }
 
@@ -306,28 +244,44 @@ public sealed class SkiaRendererService : ISkiaRendererService
 
     private static SKFontStyleWeight ResolveFontWeight(string? fontWeight)
     {
-        return (fontWeight?.ToLowerInvariant() ?? "regular") switch
+        return (fontWeight?.ToLowerInvariant() ?? "bold") switch
         {
             "regular"   => SKFontStyleWeight.Normal,
             "medium"    => SKFontStyleWeight.Medium,
             "semibold"  => SKFontStyleWeight.SemiBold,
             "bold"      => SKFontStyleWeight.Bold,
             "extrabold" => SKFontStyleWeight.ExtraBold,
-            _           => SKFontStyleWeight.Normal,
+            _           => SKFontStyleWeight.Bold,
         };
     }
 
     private static SKColor ParseHexColor(string? hex)
     {
         if (string.IsNullOrWhiteSpace(hex)) return SKColors.White;
+        try { return SKColor.Parse(hex); }
+        catch { return SKColors.White; }
+    }
 
-        try
+    private static List<string> WrapWords(string text, SKPaint paint, float maxWidth)
+    {
+        var words   = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var lines   = new List<string>();
+        var current = string.Empty;
+
+        foreach (var word in words)
         {
-            return SKColor.Parse(hex);
+            var candidate = current.Length == 0 ? word : current + " " + word;
+            if (paint.MeasureText(candidate) <= maxWidth)
+            {
+                current = candidate;
+            }
+            else
+            {
+                if (current.Length > 0) lines.Add(current);
+                current = word;
+            }
         }
-        catch
-        {
-            return SKColors.White;
-        }
+        if (current.Length > 0) lines.Add(current);
+        return lines;
     }
 }

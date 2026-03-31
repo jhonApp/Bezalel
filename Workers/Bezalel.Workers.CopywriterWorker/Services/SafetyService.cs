@@ -1,7 +1,6 @@
 using Amazon.Lambda.Core;
-using System.Text.RegularExpressions;
 
-namespace Bezalel.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.CopywriterWorker.Services;
 
 public interface ISafetyService
 {
@@ -10,22 +9,19 @@ public interface ISafetyService
 
 public class LocalSafetyService : ISafetyService
 {
-    // Basic set of patterns that could indicate prompt injection or system override attempts
-    private static readonly string[] BadKeywords = 
-    { 
-        "ignore previous instructions", 
-        "system prompt", 
-        "dan mode", 
+    private static readonly string[] BadKeywords =
+    {
+        "ignore previous instructions",
+        "system prompt",
+        "dan mode",
         "jailbreak",
-        "<|endoftext|>", // Common token abuse
-        "Forget about the church" 
+        "endoftext"
     };
 
     public bool IsContentSafe(string userText, ILambdaLogger logger)
     {
         if (string.IsNullOrWhiteSpace(userText)) return true;
 
-        // 1. Keyword check
         foreach (var keyword in BadKeywords)
         {
             if (userText.Contains(keyword, StringComparison.OrdinalIgnoreCase))
@@ -35,7 +31,6 @@ public class LocalSafetyService : ISafetyService
             }
         }
 
-        // 2. Length check (protect SkiaSharp and LLM costs)
         if (userText.Length > 2000)
         {
              logger.LogWarning($"[Safety] Input text too long ({userText.Length} chars). Possible DoS.");

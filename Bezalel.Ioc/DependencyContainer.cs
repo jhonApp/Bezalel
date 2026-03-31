@@ -19,28 +19,26 @@ namespace Bezalel.Ioc
             services.AddHttpContextAccessor();
             services.AddHttpClient();
 
-            // --- 1. Configurações ---
-            var awsRegion = configuration["AWS:Region"] ?? "us-east-1";
-
-            // --- 2. AWS Clients (Mantive sua lógica de LocalStack) ---
+            // --- 1. AWS Clients ---
             services.AddSingleton<IAmazonDynamoDB>(sp => CreateDynamoDbClient(configuration));
             services.AddSingleton<IAmazonSQS>(sp => CreateSqsClient(configuration));
             services.AddSingleton<IAmazonS3>(sp => CreateS3Client(configuration));
 
-            services.AddScoped<ITokenProvider, GoogleTokenProvider>();
-            services.AddScoped<IVertexAiService, VertexAiService>();
-            services.AddScoped<IDesignsService, DesignsService>();
+            // --- 2. Application Services ---
+            services.AddScoped<ICarouselService, CarouselService>();
 
-            // --- 3. Repositories & Services ---
-            services.AddScoped<IDesignRepository, DynamoDbDesignRepository>(sp =>
+            // --- 3. Repositories ---
+            services.AddScoped<ICarouselJobRepository>(sp =>
             {
                 var client = sp.GetRequiredService<IAmazonDynamoDB>();
-                var tableName = configuration["DynamoDb:TableName"] ?? "Designs";
-                return new DynamoDbDesignRepository(client, tableName);
+                var tableName = configuration["DynamoDb:CarouselJobTableName"] ?? "Bezalel_Dev_CarouselJobs";
+                return new DynamoDbCarouselJobRepository(client, tableName);
             });
 
+            // --- 4. Infrastructure Services (Generic) ---
             services.AddScoped<IQueuePublisher, SqsPublisher>();
             services.AddScoped<ISafetyService, SafetyService>();
+            services.AddScoped<IStorageService, S3StorageService>();
 
             services.AddScoped<IAuditPublisher>(sp =>
             {
@@ -49,26 +47,10 @@ namespace Bezalel.Ioc
                 return new SqsAuditPublisher(sqsClient, auditUrl);
             });
 
-            services.AddScoped<IStorageService, S3StorageService>();
-
-            // --- 4. Auth & Identity ---
+            // --- 5. Auth & Identity ---
             services.AddScoped<IDynamoDBContext>(sp => {
                 var client = sp.GetRequiredService<IAmazonDynamoDB>();
                 return new DynamoDBContext(client);
-            });
-
-            services.AddScoped<IBannerRepository>(sp =>
-            {
-                var client = sp.GetRequiredService<IAmazonDynamoDB>();
-                var tableName = configuration["DynamoDb:BannerTableName"] ?? "Bezalel_Dev_Banner";
-                return new DynamoDbBannerAnalysisRepository(client, tableName);
-            });
-
-            services.AddScoped<ISqsPublisher>(sp =>
-            {
-                var sqsClient = sp.GetRequiredService<IAmazonSQS>();
-                var queueUrl = configuration["AWS:AnalysisQueueUrl"];
-                return new SqsAnalysisPublisher(sqsClient, queueUrl);
             });
 
             services.AddScoped<IUserRepository, DynamoDbUserRepository>();

@@ -7,155 +7,104 @@ using System.Text.Json;
 namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
-/// Reads banner metadata and updates job status records in DynamoDB.
+/// Reads carousel job data and updates job status in DynamoDB.
 /// </summary>
 public sealed class DynamoDbJobRepository : IDynamoDbJobRepository
 {
-    private readonly string _bannerTable = Environment.GetEnvironmentVariable("DYNAMODB_BANNER_TABLE") ?? "Bezalel_Dev_Banner";
-    
-    private readonly string _jobTable = Environment.GetEnvironmentVariable("DYNAMODB_JOB_TABLE") ?? "Bezalel_Dev_Job";
-
+    private readonly string _jobTable = Environment.GetEnvironmentVariable("CAROUSEL_JOBS_TABLE")
+                                        ?? "Bezalel_Dev_CarouselJobs";
     private readonly IAmazonDynamoDB _dynamo;
+
+    private static readonly JsonSerializerOptions JsonOpts = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
 
     public DynamoDbJobRepository(IAmazonDynamoDB dynamo) => _dynamo = dynamo;
 
-    public async Task<BannerAnalysisResult> GetBannerMetadataAsync(string bannerId, ILambdaLogger logger)
+    public async Task<CarouselJobRecord> GetCarouselJobAsync(string carouselJobId, ILambdaLogger logger)
     {
-        logger.LogInformation($"[DynamoDbJobRepository] Fetching banner metadata for BannerId: {bannerId}");
+        logger.LogInformation($"[DynamoDbJobRepository] Fetching carousel job: {carouselJobId}");
 
         var response = await _dynamo.GetItemAsync(new GetItemRequest
         {
-            TableName = _bannerTable,
+            TableName = _jobTable,
             Key = new Dictionary<string, AttributeValue>
             {
-                ["BannerId"] = new AttributeValue { S = bannerId }
+                ["JobId"] = new AttributeValue { S = carouselJobId }
             }
         });
 
         if (response.Item is null || response.Item.Count == 0)
-            throw new InvalidOperationException($"Banner '{bannerId}' not found in DynamoDB.");
+            throw new InvalidOperationException($"CarouselJob '{carouselJobId}' not found in DynamoDB.");
 
         var item = response.Item;
 
-        var lr = new LayoutRules(
-            CutoutPlacement:       "",
-            CutoutScalePercentage: 0,
-            TextPlacement:         "",
-            TextAlign:             ""
-        );
+        // Parse the CarouselJson field (populated by CopywriterWorker)
+        var carouselJson = item.TryGetValue("CarouselJson", out var cjVal) ? cjVal.S : null;
+        if (string.IsNullOrEmpty(carouselJson))
+            throw new InvalidOperationException($"CarouselJob '{carouselJobId}' has no CarouselJson data.");
 
-        if (item.TryGetValue("LayoutRules", out var lrMap) && lrMap.M != null)
-        {
-            lr = new LayoutRules(
-                CutoutPlacement:       lrMap.M.TryGetValue("CutoutPlacement",       out var cpVal) ? cpVal.S : "",
-                CutoutScalePercentage: lrMap.M.TryGetValue("CutoutScalePercentage", out var spVal) && int.TryParse(spVal.N, out var scale) ? scale : 0,
-                TextPlacement:         lrMap.M.TryGetValue("TextPlacement",         out var tpVal) ? tpVal.S : "",
-                TextAlign:             lrMap.M.TryGetValue("TextAlign",             out var taVal) ? taVal.S : ""
-            );
-        }
+        var parsed = JsonSerializer.Deserialize<CarouselJobRecord>(carouselJson, JsonOpts)
+            ?? throw new InvalidOperationException("Failed to deserialize CarouselJson.");
 
-        var result = new BannerAnalysisResult(
-            MasterPrompt:    item.TryGetValue("MasterPrompt",    out var mp)  ? mp.S  : string.Empty,
-            Colors:          item.TryGetValue("Colors",          out var col) ? col.SS : new List<string>(),
-            Typography:      item.TryGetValue("Typography",      out var ty)  ? ty.S  : string.Empty,
-            LayoutRules:     lr,
-            HasCutoutImages: item.TryGetValue("HasCutoutImages", out var hc)  && hc.BOOL,
-            CutoutPlacement: item.TryGetValue("CutoutPlacement", out var cp) && !string.IsNullOrEmpty(cp.S) ? cp.S : null
-        );
+        // Override JobId from DynamoDB key (in case JSON doesn't contain it)
+        var result = parsed with { JobId = carouselJobId };
 
-        logger.LogInformation($"[DynamoDbJobRepository] ✅ Banner metadata fetched. HasCutout: {result.HasCutoutImages}");
+        logger.LogInformation($"[DynamoDbJobRepository] Carousel job fetched. Slides: {result.Slides.Count}");
         return result;
     }
 
     public async Task UpdateJobStatusAsync(string jobId, string status, ILambdaLogger logger, string? finalUrl = null)
     {
-        logger.LogInformation($"[DynamoDbJobRepository] Updating job {jobId} → Status: {status}");
+        logger.LogInformation($"[DynamoDbJobRepository] Updating job {jobId} -> Status: {status}");
 
-        var item = new Dictionary<string, AttributeValue>
+        var updateExpr = "SET #st = :status, UpdatedAt = :now";
+        var exprNames = new Dictionary<string, string> { ["#st"] = "Status" };
+        var exprValues = new Dictionary<string, AttributeValue>
         {
-            ["JobId"]     = new AttributeValue { S = jobId },
-            ["Status"]    = new AttributeValue { S = status },
-            ["UpdatedAt"] = new AttributeValue { S = DateTime.UtcNow.ToString("O") }
+            [":status"] = new AttributeValue { S = status },
+            [":now"]    = new AttributeValue { S = DateTime.UtcNow.ToString("O") }
         };
 
         if (!string.IsNullOrEmpty(finalUrl))
-            item["FinalS3Url"] = new AttributeValue { S = finalUrl };
+        {
+            updateExpr += ", FinalS3Url = :url";
+            exprValues[":url"] = new AttributeValue { S = finalUrl };
+        }
 
-        await _dynamo.PutItemAsync(new PutItemRequest
+        await _dynamo.UpdateItemAsync(new UpdateItemRequest
         {
             TableName = _jobTable,
-            Item      = item
-        });
-
-        logger.LogInformation($"[DynamoDbJobRepository] ✅ Job {jobId} status updated to {status}");
-    }
-
-    public async Task<BannerFullRecord> GetBannerFullRecordAsync(string bannerId, ILambdaLogger logger)
-    {
-        logger.LogInformation($"[DynamoDbJobRepository] 📦 Fetching full banner record for BannerId: {bannerId}");
-
-        var response = await _dynamo.GetItemAsync(new GetItemRequest
-        {
-            TableName = _bannerTable,
             Key = new Dictionary<string, AttributeValue>
             {
-                ["BannerId"] = new AttributeValue { S = bannerId }
+                ["JobId"] = new AttributeValue { S = jobId }
+            },
+            UpdateExpression = updateExpr,
+            ExpressionAttributeNames = exprNames,
+            ExpressionAttributeValues = exprValues
+        });
+    }
+
+    public async Task UpdateJobWithSlideUrlsAsync(string jobId, List<string> slideUrls, ILambdaLogger logger)
+    {
+        logger.LogInformation($"[DynamoDbJobRepository] Saving {slideUrls.Count} slide URLs for job {jobId}");
+
+        await _dynamo.UpdateItemAsync(new UpdateItemRequest
+        {
+            TableName = _jobTable,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                ["JobId"] = new AttributeValue { S = jobId }
+            },
+            UpdateExpression = "SET FinalImageUrls = :urls, #st = :status, UpdatedAt = :now",
+            ExpressionAttributeNames = new Dictionary<string, string> { ["#st"] = "Status" },
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                [":urls"]   = new AttributeValue { L = slideUrls.Select(u => new AttributeValue { S = u }).ToList() },
+                [":status"] = new AttributeValue { S = "COMPLETED" },
+                [":now"]    = new AttributeValue { S = DateTime.UtcNow.ToString("O") }
             }
         });
-
-        if (response.Item is null || response.Item.Count == 0)
-            throw new InvalidOperationException($"Banner '{bannerId}' not found in DynamoDB.");
-
-        var item = response.Item;
-
-        // ── MasterPrompt ──────────────────────────────────────────────────
-        var masterPrompt = item.TryGetValue("MasterPrompt", out var mpVal) ? mpVal.S : string.Empty;
-
-        // ── OriginalImageKey ──────────────────────────────────────────────
-        var originalImageKey = item.TryGetValue("OriginalImageKey", out var oikVal) ? oikVal.S : string.Empty;
-
-        // ── HasCutoutImages ───────────────────────────────────────────────
-        var hasCutout = item.TryGetValue("HasCutoutImages", out var hcVal) && hcVal.BOOL;
-
-        // ── LayoutRulesV2 (DynamoDB Map → JSON → record) ─────────────────
-        LayoutRulesV2? layoutV2 = null;
-        if (item.TryGetValue("LayoutRulesV2", out var v2Attr))
-        {
-            // If stored as a JSON string (S), deserialize directly
-            if (!string.IsNullOrEmpty(v2Attr.S))
-            {
-                layoutV2 = JsonSerializer.Deserialize<LayoutRulesV2>(v2Attr.S, 
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-            // If stored as a DynamoDB Map (M), serialize the Document to JSON first
-            else if (v2Attr.M is { Count: > 0 })
-            {
-                var doc = Amazon.DynamoDBv2.DocumentModel.Document.FromAttributeMap(v2Attr.M);
-                layoutV2 = JsonSerializer.Deserialize<LayoutRulesV2>(doc.ToJson(),
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-        }
-
-        // ── LayoutRules V1 (legacy fallback) ─────────────────────────────
-        LayoutRules? lr = null;
-        if (item.TryGetValue("LayoutRules", out var lrMap) && lrMap.M != null)
-        {
-            lr = new LayoutRules(
-                CutoutPlacement:       lrMap.M.TryGetValue("CutoutPlacement",       out var cpVal) ? cpVal.S : "",
-                CutoutScalePercentage: lrMap.M.TryGetValue("CutoutScalePercentage", out var spVal) && int.TryParse(spVal.N, out var scale) ? scale : 0,
-                TextPlacement:         lrMap.M.TryGetValue("TextPlacement",         out var tpVal) ? tpVal.S : "",
-                TextAlign:             lrMap.M.TryGetValue("TextAlign",             out var taVal) ? taVal.S : ""
-            );
-        }
-
-        logger.LogInformation($"[DynamoDbJobRepository] ✅ Full record fetched. HasV2: {layoutV2 is not null}, HasCutout: {hasCutout}");
-
-        return new BannerFullRecord(
-            MasterPrompt:    masterPrompt,
-            OriginalImageKey: originalImageKey,
-            LayoutRulesV2:   layoutV2,
-            LayoutRules:     lr,
-            HasCutoutImages: hasCutout
-        );
     }
 }
