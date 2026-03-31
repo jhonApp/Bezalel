@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
 using System.Text.Json;
 
-namespace Bezalel.Workers.AnalisadorBanner.Services;
+namespace Bezalel.Workers.CopywriterWorker.Services;
 
 public interface ITelemetryService
 {
@@ -12,9 +12,6 @@ public class CloudWatchTelemetryService : ITelemetryService
 {
     public void LogUsage(string jobId, string modelId, int promptTokens, int completionTokens, long latencyMs)
     {
-        // Calculate estimated cost (example rates for Claude 3.5 Sonnet)
-        // Input: $3 per million tokens
-        // Output: $15 per million tokens
         double cost = (promptTokens * 3.0 / 1_000_000.0) + (completionTokens * 15.0 / 1_000_000.0);
 
         var telemetry = new
@@ -30,7 +27,6 @@ public class CloudWatchTelemetryService : ITelemetryService
             Timestamp = DateTime.UtcNow.ToString("o")
         };
 
-        // Standard structured logging — CloudWatch Insights can parse this automatically
         Console.WriteLine(JsonSerializer.Serialize(telemetry));
     }
 }

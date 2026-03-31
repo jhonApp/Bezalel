@@ -2,7 +2,6 @@ using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
-using Amazon.S3.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Bezalel.Workers.ProcessadorArte.Models;
 using Bezalel.Workers.ProcessadorArte.Services;
@@ -18,7 +17,6 @@ public class Function
     private readonly ISkiaRendererService   _renderer;
     private readonly IS3StorageService      _s3Storage;
     private readonly IFalApiService         _falApi;
-    private readonly IAmazonS3              _s3Client;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -54,13 +52,14 @@ public class Function
         _renderer      = provider.GetRequiredService<ISkiaRendererService>();
         _s3Storage     = provider.GetRequiredService<IS3StorageService>();
         _falApi        = provider.GetRequiredService<IFalApiService>();
-        _s3Client      = provider.GetRequiredService<IAmazonS3>();
     }
 
     public async Task FunctionHandler(SQSEvent sqsEvent, ILambdaContext context)
     {
         foreach (var record in sqsEvent.Records)
         {
+            string jobId = string.Empty;
+
             try
             {
                 // ═══════════════════════════════════════════════════════════
@@ -69,166 +68,79 @@ public class Function
                 var payload = JsonSerializer.Deserialize<SqsJobPayload>(record.Body, JsonOptions)
                     ?? throw new InvalidOperationException("Invalid SQS payload.");
 
+                jobId = payload.JobId;
                 context.Logger.LogInformation(
-                    $"[ProcessadorArte] 🚀 Processing JobId: {payload.JobId}, BannerId: {payload.BannerId}");
+                    $"[ProcessadorArte] Starting rendering for JobId: {jobId}, CarouselJobId: {payload.CarouselJobId}");
 
-                await _jobRepository.UpdateJobStatusAsync(payload.JobId, "PROCESSANDO", context.Logger);
-
-                // ═══════════════════════════════════════════════════════════
-                //  STEP 2 — Fetch full banner record from DynamoDB
-                // ═══════════════════════════════════════════════════════════
-                var banner = await _jobRepository.GetBannerFullRecordAsync(payload.BannerId, context.Logger);
-
-                if (string.IsNullOrWhiteSpace(banner.MasterPrompt))
-                    throw new InvalidOperationException($"Banner '{payload.BannerId}' has no MasterPrompt.");
-
-                if (banner.LayoutRulesV2 is null)
-                    throw new InvalidOperationException($"Banner '{payload.BannerId}' has no LayoutRulesV2 data.");
+                await _jobRepository.UpdateJobStatusAsync(jobId, "RENDERING", context.Logger);
 
                 // ═══════════════════════════════════════════════════════════
-                //  STEP 3 — Generate clean background via Fal.ai
+                //  STEP 2 — Fetch full carousel job from DynamoDB
                 // ═══════════════════════════════════════════════════════════
-                context.Logger.LogInformation("[ProcessadorArte] 🎨 Generating background via Fal.ai...");
+                var carouselJob = await _jobRepository.GetCarouselJobAsync(payload.CarouselJobId, context.Logger);
 
-                var backgroundBytes = await _falApi.GenerateImageAsync(
-                    banner.MasterPrompt, context.Logger, payload.JobId);
-
-                context.Logger.LogInformation(
-                    $"[ProcessadorArte] ✅ Background generated: {backgroundBytes.Length} bytes");
+                if (carouselJob.Slides.Count == 0)
+                    throw new InvalidOperationException($"CarouselJob '{payload.CarouselJobId}' has no slides.");
 
                 // ═══════════════════════════════════════════════════════════
-                //  STEP 4 — Download person cutout from S3 (USER IMAGE)
+                //  STEP 3 — Render each slide
                 // ═══════════════════════════════════════════════════════════
-                byte[] personBytes = Array.Empty<byte>();
+                var slideUrls = new List<string>();
 
-                if (!string.IsNullOrWhiteSpace(payload.ReferenceImageUrl))
+                foreach (var slide in carouselJob.Slides.OrderBy(s => s.Order))
                 {
                     context.Logger.LogInformation(
-                        $"[ProcessadorArte] 👤 Downloading USER person cutout: {payload.ReferenceImageUrl}");
+                        $"[ProcessadorArte] Rendering slide {slide.Order}/{carouselJob.Slides.Count}...");
 
-                    try
-                    {
-                        personBytes = await DownloadPersonFromS3Async(payload.ReferenceImageUrl, context.Logger);
+                    // 3a. Generate background via Fal.ai
+                    var bgPrompt = !string.IsNullOrWhiteSpace(slide.SlideBackgroundPrompt)
+                        ? slide.SlideBackgroundPrompt
+                        : carouselJob.BackgroundPrompt;
 
-                        context.Logger.LogInformation(
-                            $"[ProcessadorArte] ✅ User person image downloaded: {personBytes.Length} bytes");
+                    var backgroundBytes = await _falApi.GenerateImageAsync(
+                        bgPrompt, context.Logger, $"{jobId}-slide-{slide.Order}");
 
-                        if (payload.RemoveBackground && personBytes.Length > 0)
-                        {
-                            context.Logger.LogInformation("[ProcessadorArte] ✂️ Removing background with Fal.ai...");
-                            personBytes = await _falApi.RemoveBackgroundAsync(personBytes, context.Logger, payload.JobId);
-                            context.Logger.LogInformation($"[ProcessadorArte] ✅ Background removed: {personBytes.Length} bytes");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        context.Logger.LogWarning(
-                            $"[ProcessadorArte] ⚠️ Could not prepare user image: {ex.Message}. Proceeding without cutout.");
-                        personBytes = Array.Empty<byte>();
-                    }
-                }
-                else
-                {
-                    context.Logger.LogInformation("[ProcessadorArte] ℹ️ No ReferenceImageUrl in payload. Rendering without user cutout.");
+                    context.Logger.LogInformation(
+                        $"[ProcessadorArte] Background generated for slide {slide.Order}: {backgroundBytes.Length} bytes");
+
+                    // 3b. Render slide with SkiaSharp
+                    var slideBytes = _renderer.RenderSlide(
+                        slide, carouselJob.Palette, backgroundBytes);
+
+                    context.Logger.LogInformation(
+                        $"[ProcessadorArte] Slide {slide.Order} rendered: {slideBytes.Length} bytes");
+
+                    // 3c. Upload rendered slide to S3
+                    var slideUrl = await _s3Storage.UploadFinalImageAsync(
+                        $"{jobId}/slide-{slide.Order:D2}", slideBytes, context.Logger);
+
+                    slideUrls.Add(slideUrl);
+
+                    context.Logger.LogInformation(
+                        $"[ProcessadorArte] Slide {slide.Order} uploaded: {slideUrl}");
                 }
 
                 // ═══════════════════════════════════════════════════════════
-                //  STEP 5 — Compose final banner with SkiaSharp (4-layer)
+                //  STEP 4 — Update job with all slide URLs → COMPLETED
                 // ═══════════════════════════════════════════════════════════
-                context.Logger.LogInformation("[ProcessadorArte] 🖼️ Composing final banner with SkiaRenderer...");
-
-                var finalBannerBytes = _renderer.RenderFinalBanner(
-                    banner.LayoutRulesV2,
-                    backgroundBytes,
-                    personBytes);
+                await _jobRepository.UpdateJobWithSlideUrlsAsync(jobId, slideUrls, context.Logger);
 
                 context.Logger.LogInformation(
-                    $"[ProcessadorArte] ✅ Final banner composed: {finalBannerBytes.Length} bytes");
-
-                // ═══════════════════════════════════════════════════════════
-                //  STEP 6 — Upload to S3
-                // ═══════════════════════════════════════════════════════════
-                var finalUrl = await _s3Storage.UploadFinalImageAsync(
-                    payload.JobId, finalBannerBytes, context.Logger);
-
-                // ═══════════════════════════════════════════════════════════
-                //  STEP 7 — Update status to COMPLETED
-                // ═══════════════════════════════════════════════════════════
-                await _jobRepository.UpdateJobStatusAsync(
-                    payload.JobId, "COMPLETED", context.Logger, finalUrl);
-
-                context.Logger.LogInformation(
-                    $"[ProcessadorArte] 🏁 Pipeline completed. FinalUrl: {finalUrl}");
+                    $"[ProcessadorArte] Pipeline completed. {slideUrls.Count} slides rendered for job {jobId}.");
             }
             catch (Exception ex)
             {
-                context.Logger.LogError($"[ProcessadorArte] ❌ Fatal Error: {ex.Message}");
+                context.Logger.LogError($"[ProcessadorArte] Fatal Error: {ex.Message}");
                 context.Logger.LogError($"[ProcessadorArte] StackTrace: {ex.StackTrace}");
+
+                if (!string.IsNullOrEmpty(jobId))
+                {
+                    try { await _jobRepository.UpdateJobStatusAsync(jobId, "FAILED", context.Logger); }
+                    catch { /* swallow */ }
+                }
+
                 throw; // Let SQS retry
             }
         }
-    }
-
-    // ── S3 Download Helper ─────────────────────────────────────────────────
-
-    /// <summary>
-    /// Downloads the person cutout from the INPUT assets bucket.
-    /// Handles both raw keys, s3:// URIs, and HTTPS absolute URLs.
-    /// </summary>
-    private async Task<byte[]> DownloadPersonFromS3Async(string objectKeyOrUrl, ILambdaLogger logger)
-    {
-        var bucket = Environment.GetEnvironmentVariable("INPUT_S3_BUCKET")
-            ?? Environment.GetEnvironmentVariable("OUTPUT_S3_BUCKET")
-            ?? throw new InvalidOperationException("Neither 'INPUT_S3_BUCKET' nor 'OUTPUT_S3_BUCKET' is configured.");
-
-        var objectKey = ExtractS3Key(objectKeyOrUrl, bucket);
-
-        logger.LogInformation($"[ProcessadorArte] ⬇️ S3 Download: bucket={bucket}, key={objectKey}");
-
-        var response = await _s3Client.GetObjectAsync(new GetObjectRequest
-        {
-            BucketName = bucket,
-            Key = objectKey
-        });
-
-        using var ms = new MemoryStream();
-        await response.ResponseStream.CopyToAsync(ms);
-        return ms.ToArray();
-    }
-
-    /// <summary>
-    /// Extracts the clean object key from any of these formats:
-    /// - URL HTTPS: https://Bezalel-dev-assets.s3.amazonaws.com/anexos/imagem.jpg
-    /// - S3 URI: s3://Bezalel-dev-assets/anexos/imagem.jpg
-    /// - Raw Key: anexos/imagem.jpg
-    /// </summary>
-    public static string ExtractS3Key(string input, string bucketName)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-
-        input = input.Trim();
-
-        if (Uri.TryCreate(input, UriKind.Absolute, out var uri))
-        {
-            // Cenário B: s3://Bezalel-dev-assets/anexos/imagem.jpg
-            if (uri.Scheme.Equals("s3", StringComparison.OrdinalIgnoreCase))
-            {
-                return uri.AbsolutePath.TrimStart('/');
-            }
-
-            // Cenário A: https://Bezalel-dev-assets.s3.amazonaws.com/anexos/imagem.jpg
-            if (uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) || 
-                uri.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase))
-            {
-                if (uri.Host.Contains("amazonaws.com", StringComparison.OrdinalIgnoreCase) || 
-                    uri.Host.Contains(bucketName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return uri.AbsolutePath.TrimStart('/');
-                }
-            }
-        }
-
-        // Cenário C: Raw Key (anexos/imagem.jpg)
-        return input.TrimStart('/');
     }
 }

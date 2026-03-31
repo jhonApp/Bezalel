@@ -3,19 +3,19 @@ using Bezalel.Workers.ProcessadorArte.Models;
 namespace Bezalel.Workers.ProcessadorArte.Services;
 
 /// <summary>
-/// Renders the final composed banner using the deterministic layout
-/// extracted by the AI (<see cref="LayoutRulesV2"/>).
+/// Renders individual carousel slides using SkiaSharp.
+/// Each slide is composed of an AI-generated background + text overlays.
 /// </summary>
 public interface ISkiaRendererService
 {
     /// <summary>
-    /// Composes background + person cutout + text overlays onto
-    /// a single SkiaSharp canvas and returns the encoded JPEG bytes.
+    /// Renders a single carousel slide: background image + headline + body + CTA.
+    /// Returns the encoded PNG bytes.
     /// </summary>
-    byte[] RenderFinalBanner(
-        LayoutRulesV2 layout,
+    byte[] RenderSlide(
+        SlideRecord slide,
+        PaletteRecord palette,
         byte[] backgroundBytes,
-        byte[] personBytes,
-        int canvasWidth = 1080,
-        int canvasHeight = 1350);
+        int canvasWidth  = 1080,
+        int canvasHeight = 1080);
 }
