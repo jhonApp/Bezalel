@@ -3,13 +3,13 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using Amazon.S3;
 using Microsoft.Extensions.DependencyInjection;
-using Bezalel.Workers.ProcessadorArte.Models;
-using Bezalel.Workers.ProcessadorArte.Services;
+using Bezalel.Workers.StudioWorker.Models;
+using Bezalel.Workers.StudioWorker.Services;
 using System.Text.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace Bezalel.Workers.ProcessadorArte;
+namespace Bezalel.Workers.StudioWorker;
 
 public class Function
 {
@@ -70,7 +70,7 @@ public class Function
 
                 jobId = payload.JobId;
                 context.Logger.LogInformation(
-                    $"[ProcessadorArte] Starting rendering for JobId: {jobId}, CarouselJobId: {payload.CarouselJobId}");
+                    $"[StudioWorker] Starting rendering for JobId: {jobId}, CarouselJobId: {payload.CarouselJobId}");
 
                 await _jobRepository.UpdateJobStatusAsync(jobId, "RENDERING", context.Logger);
 
@@ -90,7 +90,7 @@ public class Function
                 foreach (var slide in carouselJob.Slides.OrderBy(s => s.Order))
                 {
                     context.Logger.LogInformation(
-                        $"[ProcessadorArte] Rendering slide {slide.Order}/{carouselJob.Slides.Count}...");
+                        $"[StudioWorker] Rendering slide {slide.Order}/{carouselJob.Slides.Count}...");
 
                     // 3a. Generate background via Fal.ai
                     var bgPrompt = !string.IsNullOrWhiteSpace(slide.SlideBackgroundPrompt)
@@ -101,14 +101,14 @@ public class Function
                         bgPrompt, context.Logger, $"{jobId}-slide-{slide.Order}");
 
                     context.Logger.LogInformation(
-                        $"[ProcessadorArte] Background generated for slide {slide.Order}: {backgroundBytes.Length} bytes");
+                        $"[StudioWorker] Background generated for slide {slide.Order}: {backgroundBytes.Length} bytes");
 
                     // 3b. Render slide with SkiaSharp
                     var slideBytes = _renderer.RenderSlide(
                         slide, carouselJob.Palette, backgroundBytes);
 
                     context.Logger.LogInformation(
-                        $"[ProcessadorArte] Slide {slide.Order} rendered: {slideBytes.Length} bytes");
+                        $"[StudioWorker] Slide {slide.Order} rendered: {slideBytes.Length} bytes");
 
                     // 3c. Upload rendered slide to S3
                     var slideUrl = await _s3Storage.UploadFinalImageAsync(
@@ -117,7 +117,7 @@ public class Function
                     slideUrls.Add(slideUrl);
 
                     context.Logger.LogInformation(
-                        $"[ProcessadorArte] Slide {slide.Order} uploaded: {slideUrl}");
+                        $"[StudioWorker] Slide {slide.Order} uploaded: {slideUrl}");
                 }
 
                 // ═══════════════════════════════════════════════════════════
@@ -126,12 +126,12 @@ public class Function
                 await _jobRepository.UpdateJobWithSlideUrlsAsync(jobId, slideUrls, context.Logger);
 
                 context.Logger.LogInformation(
-                    $"[ProcessadorArte] Pipeline completed. {slideUrls.Count} slides rendered for job {jobId}.");
+                    $"[StudioWorker] Pipeline completed. {slideUrls.Count} slides rendered for job {jobId}.");
             }
             catch (Exception ex)
             {
-                context.Logger.LogError($"[ProcessadorArte] Fatal Error: {ex.Message}");
-                context.Logger.LogError($"[ProcessadorArte] StackTrace: {ex.StackTrace}");
+                context.Logger.LogError($"[StudioWorker] Fatal Error: {ex.Message}");
+                context.Logger.LogError($"[StudioWorker] StackTrace: {ex.StackTrace}");
 
                 if (!string.IsNullOrEmpty(jobId))
                 {

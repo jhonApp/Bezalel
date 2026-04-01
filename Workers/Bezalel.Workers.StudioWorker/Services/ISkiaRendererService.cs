@@ -1,6 +1,6 @@
-using Bezalel.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.StudioWorker.Models;
 
-namespace Bezalel.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.StudioWorker.Services;
 
 /// <summary>
 /// Renders individual carousel slides using SkiaSharp.

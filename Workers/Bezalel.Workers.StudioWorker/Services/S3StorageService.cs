@@ -2,7 +2,7 @@ using Amazon.Lambda.Core;
 using Amazon.S3;
 using Amazon.S3.Model;
 
-namespace Bezalel.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.StudioWorker.Services;
 
 /// <summary>
 /// Uploads the final composed image to an S3 bucket and returns the public URL.

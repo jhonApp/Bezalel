@@ -1,6 +1,6 @@
 using SkiaSharp;
 
-namespace Bezalel.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.StudioWorker.Services;
 
 /// <summary>
 /// Draws dynamic, auto-fitting text into a bounding box on an SKCanvas.

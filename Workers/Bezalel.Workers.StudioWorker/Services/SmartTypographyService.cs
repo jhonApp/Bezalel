@@ -1,6 +1,6 @@
 using SkiaSharp;
 
-namespace Bezalel.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.StudioWorker.Services;
 
 /// <summary>
 /// Responsive typography engine that auto-fits multi-line text into a bounding box.

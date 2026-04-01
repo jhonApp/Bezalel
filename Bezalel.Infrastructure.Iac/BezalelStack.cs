@@ -163,11 +163,11 @@ namespace Bezalel.Infrastructure.IaC
                 }
             });
 
-            var processadorLambda = new Amazon.CDK.AWS.Lambda.Function(this, "ProcessadorArteFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
+            var processadorLambda = new Amazon.CDK.AWS.Lambda.Function(this, "StudioWorkerFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
             {
                 Runtime = Amazon.CDK.AWS.Lambda.Runtime.DOTNET_8,
-                Handler = "Bezalel.Workers.ProcessadorArte::Bezalel.Workers.ProcessadorArte.Function::FunctionHandler",
-                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/ProcessadorArte"),
+                Handler = "Bezalel.Workers.StudioWorker::Bezalel.Workers.StudioWorker.Function::FunctionHandler",
+                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/StudioWorker"),
                 MemorySize = 512,
                 // CORREÇÃO: O VisibilityTimeout da fila (180s) PRECISA SER MAIOR OU IGUAL ao Timeout da Lambda.
                 Timeout = Duration.Seconds(180),  
@@ -223,7 +223,7 @@ namespace Bezalel.Infrastructure.IaC
             // NOVO: Gatilho da nova fila de análise para o AnalisadorBanner
             analisadorLambda.AddEventSource(new SqsEventSource(analysisQueue));
 
-            // ProcessadorArte: BatchSize=1 prevents parallel heavy AI jobs on the same instance;
+            // StudioWorker: BatchSize=1 prevents parallel heavy AI jobs on the same instance;
             // NOVO: (4) Alterado de auditQueue para imageGenerationQueue
             processadorLambda.AddEventSource(new SqsEventSource(imageGenerationQueue, new SqsEventSourceProps
             {

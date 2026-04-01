@@ -1,4 +1,4 @@
-namespace Bezalel.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.StudioWorker.Models;
 
 /// <summary>Represents a job record stored in DynamoDB.</summary>
 public record JobEntity(

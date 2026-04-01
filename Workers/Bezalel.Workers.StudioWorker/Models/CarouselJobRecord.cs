@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
 
-namespace Bezalel.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.StudioWorker.Models;
 
 /// <summary>
 /// Read model returned by the repository containing everything
-/// the ProcessadorArte pipeline needs to render carousel slides.
+/// the StudioWorker pipeline needs to render carousel slides.
 /// </summary>
 public record CarouselJobRecord(
     [property: JsonPropertyName("jobId")]             string          JobId,
