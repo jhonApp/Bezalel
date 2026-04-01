@@ -91,7 +91,7 @@ jobs:
     name: Deploy to AWS
     needs: build_and_test # Espera o job acima terminar
     runs-on: ubuntu-latest
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout Code
