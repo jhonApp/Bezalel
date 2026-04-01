@@ -104,7 +104,7 @@ namespace Bezalel.Infrastructure.IaC
             // 4. S3 Bucket: Bezalel-dev-assets
             var assetsBucket = new Bucket(this, "AssetsBucket", new BucketProps
             {
-                BucketName = "Bezalel-dev-assets",
+                BucketName = "bezalel-dev-assets",
                 AutoDeleteObjects = true,
                 RemovalPolicy = RemovalPolicy.DESTROY,
 
@@ -148,11 +148,11 @@ namespace Bezalel.Infrastructure.IaC
             // 5. Lambdas
             var lambdaBinaryPath = System.Environment.GetEnvironmentVariable("LAMBDA_BINARY_PATH") ?? "../lambda-publish";
 
-            var analisadorLambda = new Amazon.CDK.AWS.Lambda.Function(this, "AnalisadorBannerFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
+            var copywriterLambda = new Amazon.CDK.AWS.Lambda.Function(this, "CopywriterFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
             {
                 Runtime = Amazon.CDK.AWS.Lambda.Runtime.DOTNET_8,
-                Handler = "Bezalel.Workers.AnalisadorBanner::Bezalel.Workers.AnalisadorBanner.Function::FunctionHandler",
-                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/AnalisadorBanner"),
+                Handler = "Bezalel.Workers.Copywriter::Bezalel.Workers.Copywriter.Function::FunctionHandler",
+                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/Copywriter"),
                 MemorySize = 256,
                 Timeout = Duration.Seconds(60),
                 Environment = new System.Collections.Generic.Dictionary<string, string>
@@ -179,10 +179,10 @@ namespace Bezalel.Infrastructure.IaC
             });
 
             // 6. Permissions & Event Sources
-            designsTable.GrantReadWriteData(analisadorLambda);
+            designsTable.GrantReadWriteData(copywriterLambda);
             designsTable.GrantReadWriteData(processadorLambda);
             
-            assetsBucket.GrantReadWrite(analisadorLambda);
+            assetsBucket.GrantReadWrite(copywriterLambda);
             
             // Garantir permissão de leitura/escrita no Bucket de Assets para a Lambda Processador
             assetsBucket.GrantReadWrite(processadorLambda);
@@ -202,7 +202,7 @@ namespace Bezalel.Infrastructure.IaC
             processadorLambda.AddEnvironment("DYNAMODB_BANNER_TABLE", bannerTable.TableName);
             
             // NOVO: Concedendo permissão de Escrita/Leitura para a Lambda de Análise na Tabela Banner
-            bannerTable.GrantReadWriteData(analisadorLambda);
+            bannerTable.GrantReadWriteData(copywriterLambda);
 
             // --------------------------------------------------------------------------------------
             // NOVO: Leitura segura da chave de API Fal.ai diretamente do SSM Parameter Store
@@ -215,13 +215,13 @@ namespace Bezalel.Infrastructure.IaC
             // NOVO: Leitura segura da chave Anthropic (Claude) do SSM Parameter Store
             // --------------------------------------------------------------------------------------
             var anthropicKey = StringParameter.ValueForStringParameter(this, "/Bezalel/Anthropic_Key");
-            analisadorLambda.AddEnvironment("ANTHROPIC_KEY", anthropicKey);
+            copywriterLambda.AddEnvironment("ANTHROPIC_KEY", anthropicKey);
 
             // AnalisadorBanner: default batching is fine (lightweight analysis)
-            analisadorLambda.AddEventSource(new SqsEventSource(auditQueue));
+            copywriterLambda.AddEventSource(new SqsEventSource(auditQueue));
             
             // NOVO: Gatilho da nova fila de análise para o AnalisadorBanner
-            analisadorLambda.AddEventSource(new SqsEventSource(analysisQueue));
+            copywriterLambda.AddEventSource(new SqsEventSource(analysisQueue));
 
             // StudioWorker: BatchSize=1 prevents parallel heavy AI jobs on the same instance;
             // NOVO: (4) Alterado de auditQueue para imageGenerationQueue
@@ -246,3 +246,4 @@ namespace Bezalel.Infrastructure.IaC
         }
     }
 }
+
