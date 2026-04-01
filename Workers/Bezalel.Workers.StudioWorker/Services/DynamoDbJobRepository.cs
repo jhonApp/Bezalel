@@ -1,10 +1,10 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.Core;
-using Bezalel.Workers.ProcessadorArte.Models;
+using Bezalel.Workers.StudioWorker.Models;
 using System.Text.Json;
 
-namespace Bezalel.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.StudioWorker.Services;
 
 /// <summary>
 /// Reads carousel job data and updates job status in DynamoDB.

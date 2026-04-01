@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Bezalel.Workers.ProcessadorArte.Models;
+namespace Bezalel.Workers.StudioWorker.Models;
 
 /// <summary>Payload deserialized from the SQS message body.</summary>
 public record SqsJobPayload(

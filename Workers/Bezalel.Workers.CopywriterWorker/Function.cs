@@ -82,10 +82,10 @@ public class Function
                 // Save the generated carousel data to DynamoDB
                 await _jobRepository.SaveCarouselResultAsync(jobId, carouselJson, context.Logger);
 
-                // Update status to COPYWRITTEN (ready for ProcessadorArte)
+                // Update status to COPYWRITTEN (ready for StudioWorker)
                 await _jobRepository.UpdateStatusAsync(jobId, "COPYWRITTEN", context.Logger);
 
-                // TODO: Publish message to ProcessadorArte SQS queue to start rendering
+                // TODO: Publish message to StudioWorker SQS queue to start rendering
 
                 context.Logger.LogInformation($"[CopywriterWorker] Job {jobId} completed successfully.");
             }

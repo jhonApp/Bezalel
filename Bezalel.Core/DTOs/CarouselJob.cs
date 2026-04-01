@@ -6,7 +6,7 @@ namespace Bezalel.Core.DTOs;
 /// Represents a complete carousel generation job.
 /// Created by the API when the user submits a prompt.
 /// Enriched by the CopywriterWorker (LLM) with slides and palette.
-/// Consumed by ProcessadorArte to render each slide image.
+/// Consumed by StudioWorker to render each slide image.
 /// </summary>
 public record CarouselJob
 {

@@ -1,6 +1,6 @@
 using Amazon.Lambda.Core;
 
-namespace Bezalel.Workers.ProcessadorArte.Services;
+namespace Bezalel.Workers.StudioWorker.Services;
 
 public interface IFalApiService
 {

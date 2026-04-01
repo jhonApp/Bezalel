@@ -38,12 +38,12 @@ If already installed check if new version is available.
 
 Execute unit tests
 ```
-    cd "Bezalel.Workers.ProcessadorArte/test/Bezalel.Workers.ProcessadorArte.Tests"
+    cd "Bezalel.Workers.StudioWorker/test/Bezalel.Workers.StudioWorker.Tests"
     dotnet test
 ```
 
 Deploy function to AWS Lambda
 ```
-    cd "Bezalel.Workers.ProcessadorArte/src/Bezalel.Workers.ProcessadorArte"
+    cd "Bezalel.Workers.StudioWorker/src/Bezalel.Workers.StudioWorker"
     dotnet lambda deploy-function
 ```

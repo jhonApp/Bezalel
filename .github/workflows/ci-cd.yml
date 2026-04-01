@@ -69,11 +69,11 @@ jobs:
           fi
 
       # 8. NOVO PASSO: Publish (Gerar binários finais para as Lambdas)
-      - name: Publish AnalisadorBanner
-        run: dotnet publish ./Workers/Bezalel.Workers.AnalisadorBanner/Bezalel.Workers.AnalisadorBanner.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/AnalisadorBanner
+      - name: Publish CopywriterWorker
+        run: dotnet publish ./Workers/Bezalel.Workers.CopywriterWorker/Bezalel.Workers.CopywriterWorker.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/CopywriterWorker
 
-      - name: Publish ProcessadorArte
-        run: dotnet publish ./Workers/Bezalel.Workers.ProcessadorArte/Bezalel.Workers.ProcessadorArte.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/ProcessadorArte
+      - name: Publish StudioWorker
+        run: dotnet publish ./Workers/Bezalel.Workers.StudioWorker/Bezalel.Workers.StudioWorker.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/StudioWorker
 
       # 9. NOVO PASSO: Upload Artifact
       # Envia a pasta de publish para o GitHub, para o próximo job baixar
