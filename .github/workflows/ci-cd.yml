@@ -1,4 +1,4 @@
-name: Midianita CI/CD Pipeline
+name: Bezalel CI/CD Pipeline
 
 on:
   push:
@@ -13,8 +13,8 @@ on:
 
 env:
   DOTNET_VERSION: "8.0.x"
-  SOLUTION_PATH: "./Midianita.sln"
-  IAC_PROJECT_PATH: "./Midianita.Infrastructure.Iac"
+  SOLUTION_PATH: "./Bezalel.sln"
+  IAC_PROJECT_PATH: "./Bezalel.Infrastructure.Iac"
   LAMBDA_PUBLISH_DIR: "./lambda-publish" # Pasta temporária para os binários
   AWS_REGION: us-east-1 # Define a região padrão aqui
 
@@ -70,10 +70,10 @@ jobs:
 
       # 8. NOVO PASSO: Publish (Gerar binários finais para as Lambdas)
       - name: Publish AnalisadorBanner
-        run: dotnet publish ./Workers/Midianita.Workers.AnalisadorBanner/Midianita.Workers.AnalisadorBanner.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/AnalisadorBanner
+        run: dotnet publish ./Workers/Bezalel.Workers.AnalisadorBanner/Bezalel.Workers.AnalisadorBanner.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/AnalisadorBanner
 
       - name: Publish ProcessadorArte
-        run: dotnet publish ./Workers/Midianita.Workers.ProcessadorArte/Midianita.Workers.ProcessadorArte.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/ProcessadorArte
+        run: dotnet publish ./Workers/Bezalel.Workers.ProcessadorArte/Bezalel.Workers.ProcessadorArte.csproj -c Release -r linux-x64 --self-contained false -o ${{ env.LAMBDA_PUBLISH_DIR }}/ProcessadorArte
 
       # 9. NOVO PASSO: Upload Artifact
       # Envia a pasta de publish para o GitHub, para o próximo job baixar
