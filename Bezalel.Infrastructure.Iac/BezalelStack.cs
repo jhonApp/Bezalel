@@ -231,8 +231,12 @@ namespace Bezalel.Infrastructure.IaC
             // AnalisadorBanner: default batching is fine (lightweight analysis)
             copywriterLambda.AddEventSource(new SqsEventSource(auditQueue));
             
-            // NOVO: Gatilho da nova fila de análise para o AnalisadorBanner
+            // NOVO: Gatilho da nova fila de análise para o Copywriter
             copywriterLambda.AddEventSource(new SqsEventSource(analysisQueue));
+
+            // NOVO: Conectando CopywriterWorker para enviar mensagem à fila de Geração de Imagem
+            copywriterLambda.AddEnvironment("IMAGE_GENERATION_QUEUE_URL", imageGenerationQueue.QueueUrl);
+            imageGenerationQueue.GrantSendMessages(copywriterLambda);
 
             // StudioWorker: BatchSize=1 prevents parallel heavy AI jobs on the same instance;
             // NOVO: (4) Alterado de auditQueue para imageGenerationQueue
