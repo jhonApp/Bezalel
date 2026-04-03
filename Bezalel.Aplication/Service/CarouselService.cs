@@ -66,10 +66,10 @@ public class CarouselService : ICarouselService
             await _jobRepository.SaveAsync(job);
 
             // 2. Publish to SQS for CopywriterWorker processing
-            var queueUrl = _configuration["AWS:CopywriterQueueUrl"];
+            var queueUrl = _configuration["AWS:AnalysisQueueUrl"];
             if (string.IsNullOrEmpty(queueUrl))
             {
-                _logger.LogError("[CarouselService] AWS:CopywriterQueueUrl is not configured.");
+                _logger.LogError("[CarouselService] AWS:AnalysisQueueUrl is not configured.");
                 return new ResultOperation { Success = false, Message = "Configuração de fila inválida." };
             }
 

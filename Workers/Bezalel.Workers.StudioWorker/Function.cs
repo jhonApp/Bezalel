@@ -14,7 +14,6 @@ namespace Bezalel.Workers.StudioWorker;
 public class Function
 {
     private readonly IDynamoDbJobRepository _jobRepository;
-    private readonly ISkiaRendererService   _renderer;
     private readonly IS3StorageService      _s3Storage;
     private readonly IFalApiService         _falApi;
 
@@ -41,7 +40,6 @@ public class Function
         // ── Application Services ───────────────────────────────────────────
         services.AddTransient<IDynamoDbJobRepository, DynamoDbJobRepository>();
         services.AddTransient<IS3StorageService,      S3StorageService>();
-        services.AddSingleton<ISkiaRendererService,   SkiaRendererService>();
         services.AddTransient<IFalApiService>(provider =>
             new FalApiService(
                 provider.GetRequiredService<IHttpClientFactory>().CreateClient("AI"),
@@ -49,7 +47,6 @@ public class Function
 
         var provider   = services.BuildServiceProvider();
         _jobRepository = provider.GetRequiredService<IDynamoDbJobRepository>();
-        _renderer      = provider.GetRequiredService<ISkiaRendererService>();
         _s3Storage     = provider.GetRequiredService<IS3StorageService>();
         _falApi        = provider.GetRequiredService<IFalApiService>();
     }
@@ -103,16 +100,9 @@ public class Function
                     context.Logger.LogInformation(
                         $"[StudioWorker] Background generated for slide {slide.Order}: {backgroundBytes.Length} bytes");
 
-                    // 3b. Render slide with SkiaSharp
-                    var slideBytes = _renderer.RenderSlide(
-                        slide, carouselJob.Palette, backgroundBytes);
-
-                    context.Logger.LogInformation(
-                        $"[StudioWorker] Slide {slide.Order} rendered: {slideBytes.Length} bytes");
-
-                    // 3c. Upload rendered slide to S3
+                    // 3b. Upload background slide directly to S3 (Skipping text/Skia rendering per user request)
                     var slideUrl = await _s3Storage.UploadFinalImageAsync(
-                        $"{jobId}/slide-{slide.Order:D2}", slideBytes, context.Logger);
+                        $"{jobId}/slide-{slide.Order:D2}", backgroundBytes, context.Logger);
 
                     slideUrls.Add(slideUrl);
 
