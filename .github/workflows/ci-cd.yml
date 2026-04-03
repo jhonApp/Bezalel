@@ -130,8 +130,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Publish Copywriter
-        run: dotnet publish ./Workers/Bezalel.Workers.CopywriterWorker/Bezalel.Workers.CopywriterWorker.csproj -c Release -r linux-x64 --self-contained false -o ./lambda-publish/Copywriter
+      - name: Publish CopywriterWorker
+        run: dotnet publish ./Workers/Bezalel.Workers.CopywriterWorker/Bezalel.Workers.CopywriterWorker.csproj -c Release -r linux-x64 --self-contained false -o ./lambda-publish/CopywriterWorker
 
       - name: Publish StudioWorker
         run: dotnet publish ./Workers/Bezalel.Workers.StudioWorker/Bezalel.Workers.StudioWorker.csproj -c Release -r linux-x64 --self-contained false -o ./lambda-publish/StudioWorker

@@ -151,8 +151,8 @@ namespace Bezalel.Infrastructure.IaC
             var copywriterLambda = new Amazon.CDK.AWS.Lambda.Function(this, "CopywriterFunction", new Amazon.CDK.AWS.Lambda.FunctionProps
             {
                 Runtime = Amazon.CDK.AWS.Lambda.Runtime.DOTNET_8,
-                Handler = "Bezalel.Workers.Copywriter::Bezalel.Workers.Copywriter.Function::FunctionHandler",
-                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/Copywriter"),
+                Handler = "Bezalel.Workers.CopywriterWorker::Bezalel.Workers.CopywriterWorker.Function::FunctionHandler",
+                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset($"{lambdaBinaryPath}/CopywriterWorker"),
                 MemorySize = 256,
                 Timeout = Duration.Seconds(60),
                 Environment = new System.Collections.Generic.Dictionary<string, string>
