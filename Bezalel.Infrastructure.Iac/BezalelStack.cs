@@ -200,10 +200,10 @@ namespace Bezalel.Infrastructure.IaC
 
             // Permissões e variáveis de ambiente da nova JobTable
             jobTable.GrantReadWriteData(processadorLambda);
-            processadorLambda.AddEnvironment("DYNAMODB_JOB_TABLE", jobTable.TableName);
+            processadorLambda.AddEnvironment("CAROUSEL_JOBS_TABLE", jobTable.TableName);
 
             jobTable.GrantReadWriteData(copywriterLambda);
-            copywriterLambda.AddEnvironment("DYNAMODB_JOB_TABLE", jobTable.TableName);
+            copywriterLambda.AddEnvironment("CAROUSEL_JOBS_TABLE", jobTable.TableName);
 
             // --------------------------------------------------------------------------------------
             // NOVO: Importando a tabela Bezalel_Dev_Banner externa e dando permissão IAM para a Lambda

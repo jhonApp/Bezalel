@@ -2,12 +2,6 @@ using System.Text.Json.Serialization;
 
 namespace Bezalel.Core.DTOs;
 
-/// <summary>
-/// Represents a complete carousel generation job.
-/// Created by the API when the user submits a prompt.
-/// Enriched by the CopywriterWorker (LLM) with slides and palette.
-/// Consumed by StudioWorker to render each slide image.
-/// </summary>
 public record CarouselJob
 {
     [JsonPropertyName("jobId")]
