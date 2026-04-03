@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace Bezalel.API.Extensions
 {
@@ -18,7 +18,7 @@ namespace Bezalel.API.Extensions
 
         public static string GetEmail(this ClaimsPrincipal user)
         {
-            return user.FindFirstValue(ClaimTypes.Email);
+            return user.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
         }
     }
 }

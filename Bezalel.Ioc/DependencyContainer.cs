@@ -43,7 +43,7 @@ namespace Bezalel.Ioc
             services.AddScoped<IAuditPublisher>(sp =>
             {
                 var sqsClient = sp.GetRequiredService<IAmazonSQS>();
-                var auditUrl = configuration["AWS:AuditQueueUrl"];
+                var auditUrl = configuration["AWS:AuditQueueUrl"] ?? string.Empty;
                 return new SqsAuditPublisher(sqsClient, auditUrl);
             });
 
