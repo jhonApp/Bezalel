@@ -189,10 +189,21 @@ namespace Bezalel.Infrastructure.IaC
             // Injetar variável de ambiente informando em qual bucket salvar a imagem em JPEG final
             processadorLambda.AddEnvironment("OUTPUT_S3_BUCKET", assetsBucket.BucketName);
 
-            // NOVO: Importando a tabela Bezalel_Dev_Job externa e dando permissão + variável de ambiente
-            var jobTable = Table.FromTableName(this, "JobTable", "Bezalel_Dev_Job");
+            // NOVO: Criando a tabela Bezalel_Dev_Job (Nova arquitetura de Carrosséis)
+            var jobTable = new Table(this, "JobTable", new TableProps
+            {
+                TableName = "Bezalel_Dev_Job",
+                PartitionKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "JobId", Type = AttributeType.STRING },
+                BillingMode = BillingMode.PAY_PER_REQUEST,
+                RemovalPolicy = RemovalPolicy.DESTROY
+            });
+
+            // Permissões e variáveis de ambiente da nova JobTable
             jobTable.GrantReadWriteData(processadorLambda);
             processadorLambda.AddEnvironment("DYNAMODB_JOB_TABLE", jobTable.TableName);
+
+            jobTable.GrantReadWriteData(copywriterLambda);
+            copywriterLambda.AddEnvironment("DYNAMODB_JOB_TABLE", jobTable.TableName);
 
             // --------------------------------------------------------------------------------------
             // NOVO: Importando a tabela Bezalel_Dev_Banner externa e dando permissão IAM para a Lambda
