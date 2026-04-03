@@ -1,6 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Bezalel.Workers.CopywriterWorker.Services;
 using System.Text.Json;
@@ -19,12 +21,14 @@ public class Function
     private readonly ICopywriterService  _copywriter;
     private readonly IJobRepository      _jobRepository;
     private readonly ISafetyService      _safety;
+    private readonly IAmazonSQS          _sqsClient;
 
     public Function()
     {
         var services = new ServiceCollection();
 
         services.AddSingleton<IAmazonDynamoDB, AmazonDynamoDBClient>();
+        services.AddSingleton<IAmazonSQS, AmazonSQSClient>();
         services.AddSingleton<ITelemetryService, CloudWatchTelemetryService>();
         services.AddSingleton<ISafetyService, LocalSafetyService>();
 
@@ -43,6 +47,7 @@ public class Function
         _copywriter    = provider.GetRequiredService<ICopywriterService>();
         _jobRepository = provider.GetRequiredService<IJobRepository>();
         _safety        = provider.GetRequiredService<ISafetyService>();
+        _sqsClient     = provider.GetRequiredService<IAmazonSQS>();
     }
 
     public async Task FunctionHandler(SQSEvent sqsEvent, ILambdaContext context)
@@ -85,7 +90,25 @@ public class Function
                 // Update status to COPYWRITTEN (ready for StudioWorker)
                 await _jobRepository.UpdateStatusAsync(jobId, "COPYWRITTEN", context.Logger);
 
-                // TODO: Publish message to StudioWorker SQS queue to start rendering
+                // Publish message to StudioWorker SQS queue to start rendering
+                var queueUrl = Environment.GetEnvironmentVariable("IMAGE_GENERATION_QUEUE_URL");
+                if (!string.IsNullOrEmpty(queueUrl))
+                {
+                    var msgPayload = new { jobId = jobId, carouselJobId = jobId };
+                    var msgBody = JsonSerializer.Serialize(msgPayload, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                    
+                    var sendRequest = new SendMessageRequest
+                    {
+                        QueueUrl = queueUrl,
+                        MessageBody = msgBody
+                    };
+                    await _sqsClient.SendMessageAsync(sendRequest);
+                    context.Logger.LogInformation($"[CopywriterWorker] Disparo efetuado para a fila SQS. JobId={jobId}");
+                }
+                else
+                {
+                    context.Logger.LogWarning($"[CopywriterWorker] IMAGE_GENERATION_QUEUE_URL ausente! O JobId={jobId} não prosseguirá no pipeline.");
+                }
 
                 context.Logger.LogInformation($"[CopywriterWorker] Job {jobId} completed successfully.");
             }
