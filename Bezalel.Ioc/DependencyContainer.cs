@@ -31,7 +31,7 @@ namespace Bezalel.Ioc
             services.AddScoped<ICarouselJobRepository>(sp =>
             {
                 var client = sp.GetRequiredService<IAmazonDynamoDB>();
-                var tableName = configuration["DynamoDb:CarouselJobTableName"] ?? "Bezalel_Dev_CarouselJobs";
+                var tableName = configuration["DynamoDb:CarouselJobTableName"] ?? "Bezalel_Dev_Job";
                 return new DynamoDbCarouselJobRepository(client, tableName);
             });
 
