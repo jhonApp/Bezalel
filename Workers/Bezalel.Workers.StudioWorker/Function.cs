@@ -90,9 +90,9 @@ public class Function
                         $"[StudioWorker] Rendering slide {slide.Order}/{carouselJob.Slides.Count}...");
 
                     // 3a. Generate background via Fal.ai
-                    var bgPrompt = !string.IsNullOrWhiteSpace(slide.SlideBackgroundPrompt)
-                        ? slide.SlideBackgroundPrompt
-                        : carouselJob.BackgroundPrompt;
+                    var bgPrompt = slide.ImagePrompt;
+                    if (string.IsNullOrWhiteSpace(bgPrompt))
+                        throw new InvalidOperationException($"Slide {slide.Order} has no ImagePrompt.");
 
                     var backgroundBytes = await _falApi.GenerateImageAsync(
                         bgPrompt, context.Logger, $"{jobId}-slide-{slide.Order}");

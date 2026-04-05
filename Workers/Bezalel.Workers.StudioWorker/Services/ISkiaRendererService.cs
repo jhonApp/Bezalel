@@ -9,7 +9,7 @@ namespace Bezalel.Workers.StudioWorker.Services;
 public interface ISkiaRendererService
 {
     /// <summary>
-    /// Renders a single carousel slide: background image + headline + body + CTA.
+    /// Renders a single carousel slide: background image + headline + body.
     /// Returns the encoded PNG bytes.
     /// </summary>
     byte[] RenderSlide(
