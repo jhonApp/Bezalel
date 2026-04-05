@@ -42,14 +42,14 @@ public sealed class FalApiService : IFalApiService
             var apiKey = Environment.GetEnvironmentVariable(FalApiKeyEnv)
                 ?? throw new InvalidOperationException($"Environment variable '{FalApiKeyEnv}' is not set.");
 
-            // Map standard aspect ratios to Fal.ai model image_size identifiers
-            var falImageSize = aspectRatio switch
+            // Map standard aspect ratios explicitly to dimensions
+            object falImageSize = aspectRatio switch
             {
-                "1:1"  => "square_hd",
-                "16:9" => "landscape_16_9",
-                "4:3"  => "landscape_4_3",
-                "9:16" => "portrait_16_9",
-                _      => "square_hd" // Default
+                "1:1"  => new { width = 1024, height = 1024 },
+                "16:9" => new { width = 1024, height = 576 },
+                "4:3"  => new { width = 1024, height = 768 },
+                "9:16" => new { width = 576,  height = 1024 },
+                _      => new { width = 1024, height = 1024 } 
             };
 
             var requestBody = new 
