@@ -95,7 +95,7 @@ public class Function
                         throw new InvalidOperationException($"Slide {slide.Order} has no ImagePrompt.");
 
                     var backgroundBytes = await _falApi.GenerateImageAsync(
-                        bgPrompt, context.Logger, $"{jobId}-slide-{slide.Order}");
+                        bgPrompt, context.Logger, $"{jobId}-slide-{slide.Order}", slide.AspectRatio);
 
                     context.Logger.LogInformation(
                         $"[StudioWorker] Background generated for slide {slide.Order}: {backgroundBytes.Length} bytes");

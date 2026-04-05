@@ -31,7 +31,7 @@ public sealed class FalApiService : IFalApiService
             .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(1.5, retryAttempt)));
     }
 
-    public async Task<byte[]> GenerateImageAsync(string masterPrompt, ILambdaLogger logger, string jobId)
+    public async Task<byte[]> GenerateImageAsync(string masterPrompt, ILambdaLogger logger, string jobId, string aspectRatio)
     {
         var sw = Stopwatch.StartNew();
         bool success = false;
@@ -42,10 +42,20 @@ public sealed class FalApiService : IFalApiService
             var apiKey = Environment.GetEnvironmentVariable(FalApiKeyEnv)
                 ?? throw new InvalidOperationException($"Environment variable '{FalApiKeyEnv}' is not set.");
 
+            // Map standard aspect ratios to Fal.ai model image_size identifiers
+            var falImageSize = aspectRatio switch
+            {
+                "1:1"  => "square_hd",
+                "16:9" => "landscape_16_9",
+                "4:3"  => "landscape_4_3",
+                "9:16" => "portrait_16_9",
+                _      => "square_hd" // Default
+            };
+
             var requestBody = new 
             { 
                 prompt = masterPrompt,
-                image_size = "landscape_4_3", // Optimized for banners
+                image_size = falImageSize,
                 num_images = 1
             };
             // Serializamos o JSON uma única vez — reutilizá-lo é seguro pois é uma string imutável.

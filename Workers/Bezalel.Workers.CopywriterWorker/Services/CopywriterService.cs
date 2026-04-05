@@ -30,15 +30,17 @@ public sealed class CopywriterService : ICopywriterService
         "5. Last slide: Body must contain a clear, persuasive CTA written in Brazilian Portuguese (e.g. 'Salva esse post', 'Me chama no direct', 'Qual foi sua maior sacada?').\n\n" +
 
         "=== LAYOUT RULES (MANDATORY) ===\n" +
-        "- Slide with order=1: layoutType MUST be 'CoverFullImage'. The image fills the entire screen. Headline is large and bold, overlaid on top of the photo.\n" +
-        "- All other slides: layoutType MUST be 'EditorialArticle'. Solid background (white or light grey). A 16:9 horizontal photo centered on the page in the style of a newspaper article. Headline above the photo, Body below.\n\n" +
+        "- Slide with order=1: layoutType MUST be 'CoverFullImage', and you MUST add the key \"aspectRatio\": \"1:1\". The image fills the entire screen. Headline is large and bold, overlaid on top of the photo.\n" +
+        "- All other slides: layoutType MUST be 'EditorialArticle', and you MUST add the key \"aspectRatio\": \"16:9\". Solid background (white or light grey). A 16:9 horizontal photo centered on the page in the style of a newspaper article. Headline above the photo, Body below.\n\n" +
 
         "=== CINEMATIC PHOTOGRAPHY RULES (ImagePrompt) ===\n" +
         "ABSOLUTE PROHIBITION: Never use terms like 'abstract', 'gradient', 'shapes', 'geometric', 'concept', 'metaphor', or 'illustration'.\n" +
         "You MUST request REAL PEOPLE and REAL LOCATIONS. Each ImagePrompt must:\n" +
         "  a) Describe a concrete, high-quality photographic scene that includes the human element (e.g., a specific professional, an executive, an artisan, a customer, or a generic 'subject').\n" +
         "  b) Describe a highly detailed real-world context (e.g., a modern dental clinic office, a manufacturing floor, a bustling coffee shop, a clean laboratory, an industrial kitchen). Focus on details like textures, materials, and lighting to ground the scene in reality.\n" +
-        "  c) Always end with: ', cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks, abstract, rendering, concept, vector, flat, cartoon.'\n" +
+        "  c) Structure the framing and completion of the prompt based on the slide:\n" +
+        "     - For Slide 1 (Cover): Focus on a centered object or a close-up portrait for maximum visual impact. You MUST ALWAYS add this exact suffix at the end: ', square format, 1:1 aspect ratio, perfectly centered composition, symmetric, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks, abstract, rendering, concept, vector, flat, cartoon.'\n" +
+        "     - For Slides 2+ (Content): Describe wider cinematic shots where characters/elements don't fill the entire screen, ensuring negative space for text overlays. You MUST ALWAYS add this exact suffix at the end: ', landscape format, 16:9 aspect ratio, wide cinematic shot, negative space for text overlay, uncropped, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks, abstract, rendering, concept, vector, flat, cartoon.'\n" +
         "  d) Be written entirely in English.\n\n" +
 
         "=== HIGHLIGHT WORDS RULES ===\n" +
@@ -57,18 +59,20 @@ public sealed class CopywriterService : ICopywriterService
         "    {\n" +
         "      \"order\": 1,\n" +
         "      \"layoutType\": \"CoverFullImage\",\n" +
+        "      \"aspectRatio\": \"1:1\",\n" +
         "      \"headline\": \"O Fim do Algoritmo Tradicional\",\n" +
         "      \"highlightWords\": [\"Fim\", \"Algoritmo\"],\n" +
         "      \"body\": \"Porque ter milhões de seguidores pode ser um péssimo negócio.\",\n" +
-        "      \"imagePrompt\": \"A stressed influencer looking at a smartphone in a dark room, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.\"\n" +
+        "      \"imagePrompt\": \"A close-up portrait of a stressed influencer looking at a smartphone in a dark room, square format, 1:1 aspect ratio, perfectly centered composition, symmetric, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks, abstract, rendering, concept, vector, flat, cartoon.\"\n" +
         "    },\n" +
         "    {\n" +
         "      \"order\": 2,\n" +
         "      \"layoutType\": \"EditorialArticle\",\n" +
+        "      \"aspectRatio\": \"16:9\",\n" +
         "      \"headline\": \"A Nova Métrica de Ouro\",\n" +
         "      \"highlightWords\": [\"Métrica\"],\n" +
         "      \"body\": \"As marcas não compram mais alcance, elas compram atenção retida.\",\n" +
-        "      \"imagePrompt\": \"A close-up of a business executive analyzing graphs on a modern tablet in a brightly lit glass office, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.\"\n" +
+        "      \"imagePrompt\": \"A wide shot of a business executive analyzing graphs on a modern tablet in a brightly lit glass office, landscape format, 16:9 aspect ratio, wide cinematic shot, negative space for text overlay, uncropped, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks, abstract, rendering, concept, vector, flat, cartoon.\"\n" +
         "    },\n" +
         "    {\n" +
         "      \"order\": \"...continue generating the remaining slides up to the requested amount...\"\n" +
