@@ -23,6 +23,7 @@ public record PaletteRecord(
 public record SlideRecord(
     [property: JsonPropertyName("order")]            int            Order,
     [property: JsonPropertyName("layoutType")]       string         LayoutType,
+    [property: JsonPropertyName("aspectRatio")]      string         AspectRatio,
     [property: JsonPropertyName("headline")]         string         Headline,
     [property: JsonPropertyName("highlightWords")]   List<string>?  HighlightWords,
     [property: JsonPropertyName("body")]             string?        Body,

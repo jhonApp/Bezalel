@@ -7,7 +7,8 @@ public interface IFalApiService
     Task<byte[]> GenerateImageAsync(
         string masterPrompt, 
         ILambdaLogger logger,
-        string jobId);
+        string jobId,
+        string aspectRatio);
 
     Task<byte[]> RemoveBackgroundAsync(
         byte[] imageBytes,
