@@ -2,11 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace Bezalel.Workers.StudioWorker.Models;
 
-/// <summary>Payload deserialized from the SQS message body.</summary>
+/// <summary>
+/// Payload deserialized from the SQS message body.
+/// Sent by CopywriterWorker after saving the carousel JSON to DynamoDB.
+/// </summary>
 public record SqsJobPayload(
-    [property: JsonPropertyName("JobId")]             string JobId,
-    [property: JsonPropertyName("CarouselJobId")]     string CarouselJobId,
-    [property: JsonPropertyName("SlideOrder")]        int    SlideOrder,
-    [property: JsonPropertyName("BackgroundPrompt")]  string BackgroundPrompt,
-    [property: JsonPropertyName("SlidesJson")]        string SlidesJson
+    [property: JsonPropertyName("jobId")]          string JobId,
+    [property: JsonPropertyName("carouselJobId")]  string CarouselJobId
 );
