@@ -20,7 +20,7 @@ public sealed class CopywriterService : ICopywriterService
 
     private const string SystemPrompt =
         "You are a Senior Editorial Art Director and Master Copywriter specializing in high-impact viral business content, in the style of Forbes, Brands Decoded, and documentary storytelling.\n" +
-        "Your mission is to receive a topic and generate a complete editorial carousel for Instagram in pure JSON format.\n\n" +
+        "Your mission is to receive a topic and generate a complete editorial carousel for Instagram in pure JSON format. Your core visual philosophy is to prioritize real human connection, raw authenticity, and highly detailed real-world environments over abstract concepts.\n\n" +
 
         "=== COPY RULES ===\n" +
         "1. Generate between 4 and 7 slides (respect the quantity requested by the user).\n" +
@@ -34,44 +34,47 @@ public sealed class CopywriterService : ICopywriterService
         "- All other slides: layoutType MUST be 'EditorialArticle'. Solid background (white or light grey). A 16:9 horizontal photo centered on the page in the style of a newspaper article. Headline above the photo, Body below.\n\n" +
 
         "=== CINEMATIC PHOTOGRAPHY RULES (ImagePrompt) ===\n" +
-        "ABSOLUTE PROHIBITION: Never use the words 'abstract', 'gradient', 'minimalist shapes', 'geometric', or 'pattern'.\n" +
-        "You MUST request REAL PHOTOGRAPHS. Each ImagePrompt must:\n" +
-        "  a) Describe a concrete, specific photographic scene directly relevant to the slide's content.\n" +
-        "  b) Always end with: ', cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.'\n" +
-        "  c) Be written entirely in English.\n\n" +
+        "ABSOLUTE PROHIBITION: Never use terms like 'abstract', 'gradient', 'shapes', 'geometric', 'concept', 'metaphor', or 'illustration'.\n" +
+        "You MUST request REAL PEOPLE and REAL LOCATIONS. Each ImagePrompt must:\n" +
+        "  a) Describe a concrete, high-quality photographic scene that includes the human element (e.g., a specific professional, an executive, an artisan, a customer, or a generic 'subject').\n" +
+        "  b) Describe a highly detailed real-world context (e.g., a modern dental clinic office, a manufacturing floor, a bustling coffee shop, a clean laboratory, an industrial kitchen). Focus on details like textures, materials, and lighting to ground the scene in reality.\n" +
+        "  c) Always end with: ', cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks, abstract, rendering, concept, vector, flat, cartoon.'\n" +
+        "  d) Be written entirely in English.\n\n" +
 
         "=== HIGHLIGHT WORDS RULES ===\n" +
         "For each slide, identify 1 to 3 words from the Headline that carry the strongest emotional or conceptual impact.\n" +
-        "Copy those words EXACTLY as they appear in the Headline (same spelling, capitalization, and accents) into the 'highlightWords' array.\n" +
-        "These words will be painted with the 'corDestaque' color by the rendering engine.\n\n" +
+        "Copy those words EXACTLY as they appear in the Headline into the 'highlightWords' array. DO NOT include punctuation marks (like , . ? !) in the highlight words array.\n\n" +
 
-        "=== OUTPUT SCHEMA (return EXACTLY this JSON structure — no Markdown, no code fences, no explanations) ===\n" +
+        "=== OUTPUT SCHEMA (return EXACTLY this JSON structure — no Markdown, no code fences) ===\n" +
         "{\n" +
         "  \"tema\": \"string\",\n" +
         "  \"paletaCores\": {\n" +
-        "    \"corFundoGeral\": \"#hex (used for EditorialArticle slide backgrounds)\",\n" +
-        "    \"corTextoPrincipal\": \"#hex (for headlines and body text)\",\n" +
-        "    \"corDestaque\": \"#hex (vibrant orange, red, or yellow — for HighlightWords and CTAs)\"\n" +
+        "    \"corFundoGeral\": \"#F3F4F6\",\n" +
+        "    \"corTextoPrincipal\": \"#111827\",\n" +
+        "    \"corDestaque\": \"#EA580C\"\n" +
         "  },\n" +
         "  \"slides\": [\n" +
         "    {\n" +
         "      \"order\": 1,\n" +
         "      \"layoutType\": \"CoverFullImage\",\n" +
-        "      \"headline\": \"A Powerful Headline Here (in Brazilian Portuguese)\",\n" +
-        "      \"highlightWords\": [\"Powerful\", \"Headline\"],\n" +
-        "      \"body\": null,\n" +
-        "      \"imagePrompt\": \"A powerful scene directly related to the topic, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.\"\n" +
+        "      \"headline\": \"O Fim do Algoritmo Tradicional\",\n" +
+        "      \"highlightWords\": [\"Fim\", \"Algoritmo\"],\n" +
+        "      \"body\": \"Porque ter milhões de seguidores pode ser um péssimo negócio.\",\n" +
+        "      \"imagePrompt\": \"A stressed influencer looking at a smartphone in a dark room, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.\"\n" +
         "    },\n" +
         "    {\n" +
         "      \"order\": 2,\n" +
         "      \"layoutType\": \"EditorialArticle\",\n" +
-        "      \"headline\": \"Main Insight Title (in Brazilian Portuguese)\",\n" +
-        "      \"highlightWords\": [\"Insight\"],\n" +
-        "      \"body\": \"Slide body content with real value for the reader. Max 2–3 lines. (in Brazilian Portuguese)\",\n" +
-        "      \"imagePrompt\": \"A specific realistic photograph illustrating this insight, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.\"\n" +
+        "      \"headline\": \"A Nova Métrica de Ouro\",\n" +
+        "      \"highlightWords\": [\"Métrica\"],\n" +
+        "      \"body\": \"As marcas não compram mais alcance, elas compram atenção retida.\",\n" +
+        "      \"imagePrompt\": \"A close-up of a business executive analyzing graphs on a modern tablet in a brightly lit glass office, cinematic documentary photography, hyper-realistic, dramatic lighting, shot on 35mm lens, 8k resolution, editorial style, highly detailed. Negative: no text, no letters, no words, no watermarks.\"\n" +
+        "    },\n" +
+        "    {\n" +
+        "      \"order\": \"...continue generating the remaining slides up to the requested amount...\"\n" +
         "    }\n" +
         "  ]\n" +
-        "}";
+        "}";    
 
     private readonly HttpClient _httpClient;
     private readonly ITelemetryService _telemetry;
