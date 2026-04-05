@@ -11,7 +11,7 @@ namespace Bezalel.Workers.StudioWorker.Services;
 
 public sealed class FalApiService : IFalApiService
 {
-    private const string FalQueueUrl = "https://queue.fal.run/fal-ai/nano-banana";
+    private const string FalQueueUrl = "https://queue.fal.run/fal-ai/nano-banana-2";
     private const string FalRmbgQueueUrl = "https://queue.fal.run/fal-ai/birefnet";
     private const string FalApiKeyEnv = "FAL_KEY";
 
