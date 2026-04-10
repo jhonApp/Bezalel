@@ -134,14 +134,14 @@ namespace Bezalel.Infrastructure.IaC
             });
 
             // -----------------------------------------------------------------------
-            // NOVO: Bucket Policy — acesso público de leitura SOMENTE para 'arte final/*'
+            // NOVO: Bucket Policy — acesso público de leitura SOMENTE para 'artes-finais/*'
             // O restante do bucket permanece 100% privado.
             // -----------------------------------------------------------------------
             assetsBucket.AddToResourcePolicy(new PolicyStatement(new PolicyStatementProps
             {
                 Effect     = Effect.ALLOW,
                 Actions    = new[] { "s3:GetObject" },
-                Resources  = new[] { $"{assetsBucket.BucketArn}/arte final/*" },
+                Resources  = new[] { $"{assetsBucket.BucketArn}/artes-finais/*" },
                 Principals = new IPrincipal[] { new AnyPrincipal() }
             }));
 
