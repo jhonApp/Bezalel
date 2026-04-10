@@ -16,7 +16,7 @@ public class DynamoDbJobRepository : IJobRepository
     {
         _dynamoDb = dynamoDb;
         _tableName = Environment.GetEnvironmentVariable("CAROUSEL_JOBS_TABLE")
-                     ?? "Bezalel_Dev_CarouselJobs";
+                     ?? "Bezalel_Dev_Job";
     }
 
     public async Task UpdateStatusAsync(string jobId, string status, ILambdaLogger logger)

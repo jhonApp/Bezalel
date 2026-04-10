@@ -12,7 +12,7 @@ namespace Bezalel.Workers.StudioWorker.Services;
 public sealed class DynamoDbJobRepository : IDynamoDbJobRepository
 {
     private readonly string _jobTable = Environment.GetEnvironmentVariable("CAROUSEL_JOBS_TABLE")
-                                        ?? "Bezalel_Dev_CarouselJobs";
+                                        ?? "Bezalel_Dev_Job";
     private readonly IAmazonDynamoDB _dynamo;
 
     private static readonly JsonSerializerOptions JsonOpts = new()
@@ -48,7 +48,7 @@ public sealed class DynamoDbJobRepository : IDynamoDbJobRepository
         var parsed = JsonSerializer.Deserialize<CarouselJobRecord>(carouselJson, JsonOpts)
             ?? throw new InvalidOperationException("Failed to deserialize CarouselJson.");
 
-        // Override JobId from DynamoDB key (in case JSON doesn't contain it)
+        // Override JobId from the DynamoDB key (the Claude JSON does not include it)
         var result = parsed with { JobId = carouselJobId };
 
         logger.LogInformation($"[DynamoDbJobRepository] Carousel job fetched. Slides: {result.Slides.Count}");
