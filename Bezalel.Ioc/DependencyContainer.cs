@@ -26,6 +26,7 @@ namespace Bezalel.Ioc
 
             // --- 2. Application Services ---
             services.AddScoped<ICarouselService, CarouselService>();
+            services.AddScoped<IProjectService, ProjectService>();
 
             // --- 3. Repositories ---
             services.AddScoped<ICarouselJobRepository>(sp =>
@@ -33,6 +34,13 @@ namespace Bezalel.Ioc
                 var client = sp.GetRequiredService<IAmazonDynamoDB>();
                 var tableName = configuration["DynamoDb:CarouselJobTableName"] ?? "Bezalel_Dev_Job";
                 return new DynamoDbCarouselJobRepository(client, tableName);
+            });
+
+            services.AddScoped<IProjectRepository>(sp =>
+            {
+                var client = sp.GetRequiredService<IAmazonDynamoDB>();
+                var tableName = configuration["DynamoDb:ProjectTableName"] ?? "Bezalel_Dev_Projects";
+                return new DynamoDbProjectRepository(client, tableName);
             });
 
             // --- 4. Infrastructure Services (Generic) ---

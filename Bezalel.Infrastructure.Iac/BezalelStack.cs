@@ -206,6 +206,27 @@ namespace Bezalel.Infrastructure.IaC
             copywriterLambda.AddEnvironment("CAROUSEL_JOBS_TABLE", jobTable.TableName);
 
             // --------------------------------------------------------------------------------------
+            // NOVO: Tabela Bezalel_Dev_Projects (Projetos/Rascunhos do usuário)
+            // GSI "UserIdUpdatedAtIndex" permite listar projetos recentes por usuário
+            // com ordenação por UpdatedAt DESC e sem carregar o EditorState.
+            // --------------------------------------------------------------------------------------
+            var projectsTable = new Table(this, "ProjectsTable", new TableProps
+            {
+                TableName = "Bezalel_Dev_Projects",
+                PartitionKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "Id", Type = AttributeType.STRING },
+                BillingMode = BillingMode.PAY_PER_REQUEST,
+                RemovalPolicy = RemovalPolicy.DESTROY
+            });
+
+            projectsTable.AddGlobalSecondaryIndex(new GlobalSecondaryIndexProps
+            {
+                IndexName = "UserIdUpdatedAtIndex",
+                PartitionKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "UserId", Type = AttributeType.STRING },
+                SortKey = new Amazon.CDK.AWS.DynamoDB.Attribute { Name = "UpdatedAt", Type = AttributeType.STRING },
+                ProjectionType = ProjectionType.ALL
+            });
+
+            // --------------------------------------------------------------------------------------
             // NOVO: Importando a tabela Bezalel_Dev_Banner externa e dando permissão IAM para a Lambda
             // --------------------------------------------------------------------------------------
             var bannerTable = Table.FromTableName(this, "BannerTable", "Bezalel_Dev_Banner");
