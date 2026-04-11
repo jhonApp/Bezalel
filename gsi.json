@@ -1,0 +1,12 @@
+[
+    {
+        "IndexName": "UserIdUpdatedAtIndex",
+        "KeySchema": [
+            { "AttributeName": "UserId", "KeyType": "HASH" },
+            { "AttributeName": "UpdatedAt", "KeyType": "RANGE" }
+        ],
+        "Projection": {
+            "ProjectionType": "ALL"
+        }
+    }
+]
